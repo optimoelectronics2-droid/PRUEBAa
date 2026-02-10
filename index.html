@@ -484,6 +484,23 @@
             width: 100%;
         }
 
+        /* ✅ NUEVO: Badge visual para identificar huellas */
+        .huella-badge {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--accent);
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            z-index: 10;
+            display: none;
+        }
+        .admin-section + .huella-badge {
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .producto {
                 flex-direction: column;
@@ -609,7 +626,7 @@
         </div>
     </div>
 
-    <!-- Firebase SDK - URLs CORREGIDAS (sin espacios) -->
+    <!-- ✅ FIREBASE SDK - URLs CORREGIDAS (SIN ESPACIOS) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -636,7 +653,7 @@
         const SHEET_ID = "1dJ6IGB75oVPaWcWrQjzwjrCeZEmXwlw7";
         const GID = "1636359945";
         // 🔥 URL CORREGIDA: SIN ESPACIOS después de /d/
-        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
+        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`; // ✅ ESPACIOS ELIMINADOS
 
         let esAdmin = false;
         let todosLosProductos = [];
@@ -649,14 +666,32 @@
             return txt.replace(/[\u{1F300}-\u{1FAFF}]/gu, "").trim();
         }
 
-        function generarHuella(nombre) {
-            return nombre
+        // ✅ HUELLA ÚNICA MEJORADA: Incluye más detalles distintivos
+        function generarHuellaUnica(descripcion) {
+            // Extraer detalles clave que diferencian monitores similares
+            const pulgadas = descripcion.match(/(\d{2})["']?/)?.[1] || "";
+            const resolucion = descripcion.match(/(\d{3,4}[pPxX])/)?.[1] || "";
+            const hz = descripcion.match(/(\d{2,3})\s*Hz/)?.[1] || "";
+            
+            // Generar huella base
+            let huella = descripcion
                 .toLowerCase()
                 .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
                 .replace(/[\u{1F300}-\u{1FAFF}]/gu, "")
                 .replace(/[^a-z0-9\s]/g, " ")
                 .replace(/\s+/g, " ")
                 .trim();
+            
+            // ✅ AÑADIR DETALLES DISTINTIVOS para evitar colisiones
+            if (pulgadas) huella += `-${pulgadas}pulg`;
+            if (resolucion) huella += `-${resolucion}`;
+            if (hz) huella += `-${hz}hz`;
+            
+            return huella;
+        }
+
+        function formatearPrecio(num) {
+            return "$" + num.toLocaleString("es-DO");
         }
 
         // ✅ REGLA 5️⃣: Detectar categorías de monitores
@@ -706,8 +741,8 @@
             // =========================
             async function precargarHuellas() {
                 try {
-                    // ✅ Colección "monitores"
-                    const snapshot = await db.collection("monitores").get();
+                    // ✅ Colección "monitors" (consistente con impresoras)
+                    const snapshot = await db.collection("monitors").get();
                     mapaHuellas = {};
                     snapshot.forEach(doc => {
                         const data = doc.data();
@@ -828,14 +863,25 @@
                     // ✅ REGLA 4️⃣: Aplicar filtro de búsqueda
                     if (filtro && !descripcionCompleta.toLowerCase().includes(filtro)) return;
                     
+                    // ✅ EXTRAER Y LIMPIAR PRECIO
+                    const precioLimpio = precioRaw.replace(/[^0-9]/g, "");
+                    if (!precioLimpio) return;
+                    const precioConImpuesto = Math.round(parseFloat(precioLimpio) * 1.22);
+                    
                     const nombreLimpio = limpiarEmojis(descripcionCompleta);
-                    const huella = generarHuella(nombreLimpio);
+                    // ✅ USAR HUELLA ÚNICA MEJORADA
+                    const huella = generarHuellaUnica(descripcionCompleta);
                     const datosProducto = mapaHuellas[huella] || { id: null, imageUrl: "" };
                     const imageUrl = datosProducto.imageUrl;
                     
                     // ✅ DISEÑO HORIZONTAL IDÉNTICO A IMPRESORAS
                     const prodEl = document.createElement("div");
                     prodEl.className = "producto";
+                    
+                    // ✅ BADGE DE HUELLA para debugging visual (solo admin)
+                    const huellaBadge = document.createElement("div");
+                    huellaBadge.className = "huella-badge";
+                    huellaBadge.textContent = huella.substring(0, 15) + "...";
                     
                     let html = `
                         <div class="producto-content">
@@ -845,7 +891,7 @@
                             </div>` : ''}
                         </div>
                         <div class="producto-right">
-                            <div class="precio">${precioRaw}</div>
+                            <div class="precio">${formatearPrecio(precioConImpuesto)}</div>
                     `;
                     
                     if (esAdmin) {
@@ -863,6 +909,7 @@
                     
                     html += `</div>`;
                     prodEl.innerHTML = html;
+                    prodEl.appendChild(huellaBadge); // ✅ Añadir badge de huella
                     
                     // Eventos (idénticos a impresoras)
                     if (imageUrl) {
@@ -893,19 +940,20 @@
                                 try {
                                     const existe = mapaHuellas[huellaActual];
                                     if (existe?.id) {
-                                        await db.collection("monitores").doc(existe.id).update({
+                                        await db.collection("monitors").doc(existe.id).update({
                                             imageUrl: url,
+                                            huella: huellaActual, // ✅ Guardar huella actualizada
                                             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                                         });
                                     } else {
-                                        await db.collection("monitores").add({
+                                        await db.collection("monitors").add({
                                             huella: huellaActual,
                                             imageUrl: url,
                                             nombreOriginal: nombreProducto,
                                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
                                         });
                                     }
-                                    alert(`✅ Imagen guardada`);
+                                    alert(`✅ Imagen guardada para "${nombreProducto}"`);
                                     await precargarHuellas();
                                     renderCatalogo(todosLosProductos);
                                 } catch (err) {
@@ -916,18 +964,18 @@
                         
                         if (deleteBtn) {
                             deleteBtn.addEventListener("click", async () => {
-                                if (!confirm(`¿Eliminar imagen?`)) return;
+                                if (!confirm(`¿Eliminar imagen de "${nombreProducto}"?`)) return;
                                 const existe = mapaHuellas[huellaActual];
                                 if (!existe?.id) {
-                                    alert("No hay imagen");
+                                    alert("No hay imagen para eliminar");
                                     return;
                                 }
                                 try {
-                                    await db.collection("monitores").doc(existe.id).update({
+                                    await db.collection("monitors").doc(existe.id).update({
                                         imageUrl: firebase.firestore.FieldValue.delete(),
                                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                                     });
-                                    alert(`✅ Eliminada`);
+                                    alert(`✅ Imagen eliminada`);
                                     await precargarHuellas();
                                     renderCatalogo(todosLosProductos);
                                 } catch (err) {
