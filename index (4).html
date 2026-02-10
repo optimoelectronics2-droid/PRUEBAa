@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Trifusion Technologies - Monitores</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --card: #101624;
+            --card-border: #1f2940;
+            --accent: #00c2ff;
+            --text: #e6ecff;
+            --muted: #9aa4c6;
+            --danger: #ff4b6a;
+            --success: #00c853;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, Arial, sans-serif;
+            background: radial-gradient(circle at top, #172239 0, #050712 55%, #02030a 100%);
+            color: var(--text);
+            line-height: 1.5;
+            padding-bottom: 40px;
+        }
+        
+        header {
+            padding: 18px 16px;
+            background: rgba(0, 0, 0, 0.85);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .logo-title h1 {
+            font-size: 24px;
+            background: linear-gradient(90deg, var(--accent), #7b3fe4, #ff4b6a);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+        }
+        
+        .header-contact {
+            font-size: 13px;
+            color: var(--muted);
+            text-align: right;
+        }
+        
+        .toolbar {
+            max-width: 1100px;
+            margin: 18px auto 0;
+            padding: 0 16px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+        }
+        
+        .panel {
+            background: rgba(8, 12, 26, 0.9);
+            border-radius: 14px;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .panel-title {
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .panel-title::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 14px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            background: #050815;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 10px 12px;
+            color: var(--text);
+            font-size: 15px;
+            outline: none;
+        }
+        
+        input[type="text"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(0, 194, 255, 0.2);
+        }
+        
+        button {
+            border: none;
+            border-radius: 10px;
+            padding: 10px 18px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent), #62e3ff);
+            color: #02030a;
+            box-shadow: 0 4px 10px rgba(0, 194, 255, 0.3);
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(0, 194, 255, 0.4);
+        }
+        
+        .btn-admin {
+            background: linear-gradient(135deg, #ff8a00, #ff4b6a);
+        }
+        
+        .btn-logout {
+            background: linear-gradient(135deg, #c53030, #822727);
+            display: none;
+        }
+        
+        .catalogo-wrapper {
+            max-width: 1100px;
+            margin: 20px auto;
+            padding: 0 16px;
+        }
+        
+        .catalogo {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+        
+        .categoria {
+            grid-column: 1 / -1;
+            padding: 14px 18px;
+            background: rgba(0, 194, 255, 0.25);
+            border-left: 6px solid #00c2ff;
+            font-weight: 800;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            border-radius: 0 12px 12px 0;
+            margin: 16px 0 8px;
+            font-size: 1.1rem;
+        }
+        
+        .producto {
+            background: var(--card);
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .producto:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 194, 255, 0.2);
+            border-color: rgba(0, 194, 255, 0.4);
+        }
+        
+        .producto-img-container {
+            width: 100%;
+            height: 180px;
+            background: rgba(2, 3, 10, 0.8);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 1px solid rgba(31, 41, 64, 0.7);
+        }
+        
+        .producto-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .producto-img:hover {
+            transform: scale(1.05);
+        }
+        
+        .descripcion {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 1.1rem;
+            line-height: 1.4;
+            min-height: 60px;
+        }
+        
+        .precio {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--danger);
+            background: linear-gradient(90deg, #ff4b6a, #ff8a00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-top: 4px;
+        }
+        
+        .admin-section {
+            background: rgba(30, 25, 50, 0.7);
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 8px;
+            border: 1px solid rgba(100, 80, 180, 0.5);
+        }
+        
+        .admin-section h4 {
+            color: #ffb703;
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .admin-input {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(100, 120, 180, 0.6);
+            background: rgba(10, 15, 30, 0.8);
+            color: white;
+            margin: 6px 0;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .btn-save-img {
+            flex: 1;
+            min-width: 100px;
+            background: linear-gradient(90deg, #00c853, #009629);
+            padding: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-delete-img {
+            flex: 1;
+            min-width: 100px;
+            background: linear-gradient(90deg, #ff4b6a, #c53030);
+            padding: 6px;
+            font-size: 0.9rem;
+        }
+        
+        #mensajeVacio {
+            text-align: center;
+            padding: 40px;
+            color: var(--muted);
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+        }
+        
+        .login-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .login-modal.active {
+            display: flex;
+        }
+        
+        .login-box {
+            background: rgba(20, 25, 40, 0.95);
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+        }
+        
+        .login-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #00c2ff;
+            font-weight: 700;
+        }
+        
+        .login-input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(100, 120, 180, 0.6);
+            background: rgba(10, 15, 30, 0.8);
+            color: white;
+            margin: 10px 0;
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(90deg, #00c2ff, #0077ff);
+            color: white;
+            font-weight: 700;
+            margin-top: 15px;
+            font-size: 1.05rem;
+        }
+        
+        .image-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .image-modal.active {
+            display: flex;
+        }
+        
+        .image-modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+            position: relative;
+        }
+        
+        .image-modal-img {
+            max-width: 100%;
+            max-height: 85vh;
+            display: block;
+            border-radius: 14px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(30, 30, 40, 0.8);
+            border: 2px solid #ff4b6a;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2001;
+        }
+        
+        .close-modal:hover {
+            background: #ff4b6a;
+            transform: rotate(90deg);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            color: var(--muted);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(31, 41, 64, 0.7);
+            background: rgba(10, 15, 25, 0.7);
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            .catalogo {
+                grid-template-columns: 1fr;
+            }
+            
+            .toolbar {
+                grid-template-columns: 1fr;
+            }
+            
+            .producto-img-container {
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-title">
+            <h1>Trifusion Technologies - Monitores</h1>
+        </div>
+        <div class="header-contact">
+            📍 Santo Domingo<br>
+            WhatsApp: +1 (829) 872-5163
+        </div>
+    </header>
+
+    <div class="toolbar">
+        <div class="panel">
+            <div class="panel-title">Buscar monitores</div>
+            <input id="buscadorProductos" type="text" placeholder="Escribe el modelo o características...">
+        </div>
+        <div class="panel">
+            <div class="panel-title">MONITORES</div>
+            <button id="btnLogin" class="btn-admin">TRIFUSION</button>
+            <button id="btnLogout" class="btn-logout">👋 SALIR</button>
+        </div>
+    </div>
+
+    <div class="catalogo-wrapper">
+        <div id="catalogo" class="catalogo"></div>
+        <div id="mensajeVacio" style="display:none;">No se encontraron monitores.</div>
+    </div>
+
+    <div id="loginModal" class="login-modal">
+        <div class="login-box">
+            <h2>TRIFUSION</h2>
+            <input type="email" id="adminEmail" class="login-input" placeholder="Correo electrónico" autocomplete="email" required>
+            <input type="password" id="adminPassword" class="login-input" placeholder="Contraseña" autocomplete="current-password" required>
+            <button id="submitLogin" class="btn-login">Iniciar Sesión</button>
+            <div style="margin-top: 15px; padding: 10px; background: rgba(40, 30, 20, 0.7); border-radius: 8px; font-size: 0.85rem; color: var(--muted);">
+                <strong>ℹ️ Instrucciones para imágenes:</strong><br>
+                Pega el link directo de Imgur, ImgBB o Google Drive<br>
+                <strong>Ejemplo ImgBB:</strong><br>
+                <code>https://i.ibb.co/XXXX/tu-imagen.jpg</code>
+            </div>
+        </div>
+    </div>
+
+    <div id="imageModal" class="image-modal">
+        <div class="image-modal-content">
+            <button class="close-modal">&times;</button>
+            <img id="modalImage" class="image-modal-img" src="" alt="Imagen del monitor">
+        </div>
+    </div>
+
+    <footer>
+        <p>Trifusion Technologies © 2026 - Todos los derechos reservados</p>
+        <p style="margin-top: 8px; font-size: 0.85rem; opacity: 0.7;">Catálogo de monitores actualizado en tiempo real</p>
+    </footer>
+
+    <!-- Firebase SDK - SIN ESPACIOS EN URLs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    
+    <!-- Firebase Config - INTEGRADA DIRECTAMENTE (como en index (1).html) -->
+    <script>
+        // TU CONFIGURACIÓN REAL DE FIREBASE (idéntica a index (1).html)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDlOJqBgd-8KqUT-Y94lsma5W8T79PsPjM",
+            authDomain: "trifusion-cotizador.firebaseapp.com",
+            projectId: "trifusion-cotizador",
+            storageBucket: "trifusion-cotizador.firebasestorage.app",
+            messagingSenderId: "407374211882",
+            appId: "1:407374211882:web:b692792ccc39c8d48f4c53"
+        };
+        
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
+    
+    <script>
+        // ✅ CONFIGURACIÓN CORREGIDA - MONITORES (idéntica estructura a index (1).html)
+        const SHEET_ID = "1dJ6IGB75oVPaWcWrQjzwjrCeZEmXwlw7";
+        const GID = "1636359945"; // ID de la hoja de monitores
+        // 🔥 URL CORREGIDA: SIN ESPACIOS, SINTAXIS VÁLIDA
+        const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
+        const cont = document.getElementById("catalogo");
+        const buscador = document.getElementById("buscadorProductos");
+        const mensajeVacio = document.getElementById("mensajeVacio");
+        const loginModal = document.getElementById("loginModal");
+        const imageModal = document.getElementById("imageModal");
+        const modalImage = document.getElementById("modalImage");
+        const closeModal = document.querySelector(".close-modal");
+        const loginBtn = document.getElementById("btnLogin");
+        const logoutBtn = document.getElementById("btnLogout");
+        const submitLogin = document.getElementById("submitLogin");
+
+        let esAdmin = false;
+        let todosLosProductos = [];
+        let mapaHuellas = {}; // huella → { id, imageUrl }
+
+        // =========================
+        // FUNCIONES AUXILIARES
+        // =========================
+        function limpiarEmojis(txt) {
+            return txt.replace(/[\u{1F300}-\u{1FAFF}]/gu, "").trim();
+        }
+
+        // ✅ GENERAR HUELLA ESTABLE DEL PRODUCTO (para monitores)
+        function generarHuella(nombre) {
+            return nombre
+                .toLowerCase()
+                .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+                .replace(/[\u{1F300}-\u{1FAFF}]/gu, "")
+                .replace(/[^a-z0-9\s]/g, " ")
+                .replace(/\s+/g, " ")
+                .trim();
+        }
+
+        // ✅ DETECTAR CATEGORÍAS DE MONITORES (CORREGIDO)
+        function esCategoria(row) {
+            const texto = (row[0] || "").trim().toUpperCase();
+            const precio = (row[6] || "").trim();
+            
+            // Si tiene precio, NO es categoría
+            if (precio && precio.startsWith("RD$")) return false;
+            
+            // Categorías válidas en tu Sheet de monitores
+            return texto.includes("MONITOR SAMSUNG") || 
+                   texto.includes("MONITOR MSI") || 
+                   texto.includes("MONITOR AOC") || 
+                   texto.includes("MONITOR HP");
+        }
+
+        // =========================
+        // CARGA DE HUELLAS DESDE FIRESTORE
+        // =========================
+        async function precargarHuellas() {
+            try {
+                const snapshot = await db.collection("monitores").get();
+                mapaHuellas = {};
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.huella) {
+                        mapaHuellas[data.huella] = {
+                            id: doc.id,
+                            imageUrl: data.imageUrl || "",
+                            updatedAt: data.updatedAt?.toDate?.() || null
+                        };
+                    }
+                });
+                console.log(`✅ ${Object.keys(mapaHuellas).length} huellas de monitores cargadas`);
+            } catch (error) {
+                console.error("⚠️ Error cargando huellas de monitores:", error);
+            }
+        }
+
+        // =========================
+        // AUTENTICACIÓN
+        // =========================
+        loginBtn.addEventListener("click", () => {
+            loginModal.classList.add("active");
+        });
+
+        logoutBtn.addEventListener("click", () => {
+            auth.signOut();
+        });
+
+        submitLogin.addEventListener("click", () => {
+            const email = document.getElementById("adminEmail").value.trim();
+            const password = document.getElementById("adminPassword").value.trim();
+            
+            if (!email || !password) {
+                alert("Por favor ingresa correo y contraseña");
+                return;
+            }
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .catch(error => {
+                    let message = "Error al iniciar sesión. ";
+                    if (error.code === "auth/invalid-email") {
+                        message += "Correo electrónico inválido.";
+                    } else if (error.code === "auth/wrong-password") {
+                        message += "Contraseña incorrecta.";
+                    } else if (error.code === "auth/user-not-found") {
+                        message += "Usuario no encontrado.";
+                    } else {
+                        message += error.message;
+                    }
+                    alert(message);
+                });
+        });
+
+        closeModal.addEventListener("click", () => {
+            imageModal.classList.remove("active");
+        });
+
+        imageModal.addEventListener("click", (e) => {
+            if (e.target === imageModal) {
+                imageModal.classList.remove("active");
+            }
+        });
+
+        loginModal.addEventListener("click", (e) => {
+            if (e.target === loginModal) {
+                loginModal.classList.remove("active");
+            }
+        });
+
+        // Observador de estado de autenticación
+        auth.onAuthStateChanged(user => {
+            esAdmin = !!user;
+            loginBtn.style.display = esAdmin ? "none" : "inline-flex";
+            logoutBtn.style.display = esAdmin ? "inline-flex" : "none";
+            document.getElementById("adminEmail").value = "";
+            document.getElementById("adminPassword").value = "";
+            loginModal.classList.remove("active");
+            cargarCatalogo();
+        });
+
+        // =========================
+        // CARGAR CATÁLOGO DE MONITORES
+        // =========================
+        async function cargarCatalogo() {
+            try {
+                cont.innerHTML = '<div style="text-align:center;padding:40px;color:var(--accent);font-size:1.2rem">Cargando monitores...</div>';
+                
+                // Cargar huellas de Firestore PRIMERO
+                await precargarHuellas();
+                
+                // Cargar CSV de monitores
+                const resp = await fetch(CSV_URL);
+                if (!resp.ok) throw new Error(`Error al cargar: ${resp.status}`);
+                
+                const csv = await resp.text();
+                
+                Papa.parse(csv, {
+                    skipEmptyLines: true,
+                    complete: (results) => {
+                        todosLosProductos = results.data;
+                        renderCatalogo(results.data);
+                    },
+                    error: (err) => {
+                        console.error("Error parsing CSV:", err);
+                        cont.innerHTML = `<div id="mensajeVacio" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--danger)">❌ Error al procesar el catálogo de monitores</div>`;
+                    }
+                });
+            } catch (error) {
+                console.error("Error fetching catalog:", error);
+                cont.innerHTML = `<div id="mensajeVacio" style="grid-column:1/-1;text-align:center;padding:40px;color:var(--danger)">❌ Error: ${error.message}<br><br>Verifica que el Sheet esté publicado</div>`;
+            }
+        }
+
+        function renderCatalogo(rows) {
+            cont.innerHTML = "";
+            const filtro = buscador.value.trim().toLowerCase();
+            let productosMostrados = 0;
+            
+            rows.forEach(row => {
+                // Columna A: descripción completa (índice 0)
+                // Columna G: precio (índice 6)
+                const descripcionCompleta = (row[0] || "").trim();
+                const precioRaw = (row[6] || "").trim();
+                
+                // Renderizar categoría
+                if (esCategoria(row)) {
+                    const textoCategoria = limpiarEmojis(descripcionCompleta);
+                    const catEl = document.createElement("div");
+                    catEl.className = "categoria";
+                    catEl.textContent = textoCategoria;
+                    cont.appendChild(catEl);
+                    return;
+                }
+                
+                // Saltar filas sin descripción o sin precio válido
+                if (!descripcionCompleta || !precioRaw || !precioRaw.startsWith("RD$")) return;
+                
+                // Aplicar filtro de búsqueda
+                if (filtro && !descripcionCompleta.toLowerCase().includes(filtro)) return;
+                
+                // Generar nombre limpio y huella estable
+                const nombreLimpio = limpiarEmojis(descripcionCompleta);
+                const huella = generarHuella(nombreLimpio);
+                
+                // Obtener datos del producto desde el mapa de huellas
+                const datosProducto = mapaHuellas[huella] || { id: null, imageUrl: "" };
+                const imageUrl = datosProducto.imageUrl;
+                
+                // Crear elemento de producto
+                const prodEl = document.createElement("div");
+                prodEl.className = "producto";
+                
+                // HTML del producto - PRECIO EXACTO COMO EN EL SHEET
+                let htmlProducto = `
+                    <div class="producto-img-container">
+                        ${imageUrl ? 
+                            `<img src="${imageUrl}" alt="${nombreLimpio}" class="producto-img" referrerpolicy="no-referrer">` : 
+                            `<div style="color:var(--muted);font-size:0.9rem;text-align:center;height:100%;display:flex;align-items:center;justify-content:center">Sin imagen</div>`
+                        }
+                    </div>
+                    <div class="descripcion">${nombreLimpio}</div>
+                    <div class="precio">${precioRaw}</div>
+                `;
+                
+                // Sección de administración si es admin
+                if (esAdmin) {
+                    htmlProducto += `
+                        <div class="admin-section">
+                            <h4>📸 Imagen del Monitor</h4>
+                            <input type="text" class="admin-input image-url" placeholder="Pega URL de imagen" value="${imageUrl}">
+                            <div class="admin-actions">
+                                <button class="btn btn-save-img save-image" data-huella="${huella}" data-nombre="${nombreLimpio}">💾 Guardar</button>
+                                ${imageUrl ? `<button class="btn btn-delete-img delete-image" data-huella="${huella}" data-nombre="${nombreLimpio}">🗑️ Eliminar</button>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                prodEl.innerHTML = htmlProducto;
+                
+                // Evento para ver imagen en modal
+                if (imageUrl) {
+                    const imgEl = prodEl.querySelector(".producto-img");
+                    imgEl.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        modalImage.src = imageUrl;
+                        imageModal.classList.add("active");
+                    });
+                }
+                
+                // Eventos de administración
+                if (esAdmin) {
+                    const saveBtn = prodEl.querySelector(".save-image");
+                    const deleteBtn = prodEl.querySelector(".delete-image");
+                    const urlInput = prodEl.querySelector(".image-url");
+                    const huellaActual = huella;
+                    const nombreProducto = nombreLimpio;
+                    
+                    if (saveBtn) {
+                        saveBtn.addEventListener("click", async () => {
+                            const url = urlInput.value.trim();
+                            if (!url) {
+                                alert("Por favor ingresa una URL válida");
+                                return;
+                            }
+                            
+                            const existe = mapaHuellas[huellaActual];
+                            
+                            try {
+                                if (existe?.id) {
+                                    await db.collection("monitores").doc(existe.id).update({
+                                        imageUrl: url,
+                                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                                    });
+                                } else {
+                                    await db.collection("monitores").add({
+                                        huella: huellaActual,
+                                        imageUrl: url,
+                                        nombreOriginal: nombreProducto,
+                                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                                    });
+                                }
+                                
+                                alert(`✅ Imagen guardada para "${nombreProducto}"`);
+                                await precargarHuellas();
+                                renderCatalogo(todosLosProductos);
+                            } catch (error) {
+                                console.error("Error guardando imagen:", error);
+                                alert("Error al guardar la imagen: " + error.message);
+                            }
+                        });
+                    }
+                    
+                    if (deleteBtn) {
+                        deleteBtn.addEventListener("click", async () => {
+                            if (!confirm(`¿Eliminar la imagen de "${nombreProducto}"?`)) return;
+                            
+                            const existe = mapaHuellas[huellaActual];
+                            
+                            if (!existe?.id) {
+                                alert("No hay imagen para eliminar");
+                                return;
+                            }
+                            
+                            try {
+                                await db.collection("monitores").doc(existe.id).update({
+                                    imageUrl: firebase.firestore.FieldValue.delete(),
+                                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                                });
+                                
+                                alert(`✅ Imagen eliminada para "${nombreProducto}"`);
+                                await precargarHuellas();
+                                renderCatalogo(todosLosProductos);
+                            } catch (error) {
+                                console.error("Error eliminando imagen:", error);
+                                alert("Error al eliminar la imagen: " + error.message);
+                            }
+                        });
+                    }
+                }
+                
+                cont.appendChild(prodEl);
+                productosMostrados++;
+            });
+            
+            // Mostrar mensaje si no hay productos
+            mensajeVacio.style.display = productosMostrados === 0 ? "block" : "none";
+            if (productosMostrados === 0 && cont.children.length === 0) {
+                cont.innerHTML = `<div id="mensajeVacio">No se encontraron monitores.</div>`;
+            }
+        }
+
+        // =========================
+        // EVENTOS
+        // =========================
+        buscador.addEventListener("input", (e) => {
+            renderCatalogo(todosLosProductos);
+        });
+
+        // Cargar catálogo al iniciar
+        window.addEventListener("DOMContentLoaded", cargarCatalogo);
+    </script>
+</body>
+</html>
+
