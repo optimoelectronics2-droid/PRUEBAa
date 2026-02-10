@@ -1,4 +1,19 @@
-<!DOCTYPE html>
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body {
+                  background-color: white; /* Ensure the iframe has a white background */
+                }
+
+                
+              </style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -560,7 +575,7 @@
         </div>
         <div class="panel">
             <div class="panel-title">Acceso Administrador</div>
-            <button id="btnLogin" class="btn-admin">TRIFUSION</button>
+            <button id="btnLogin" class="btn-admin">🔐 ADMIN</button>
             <button id="btnLogout" class="btn-logout">👋 SALIR</button>
         </div>
     </div>
@@ -573,12 +588,15 @@
     <!-- MODAL DE LOGIN -->
     <div id="loginModal" class="login-modal">
         <div class="login-box">
-            <h2>TRIFUSION</h2>
+            <h2>Acceso de Administrador</h2>
             <input type="email" id="adminEmail" class="login-input" placeholder="Correo electrónico" autocomplete="email" required>
             <input type="password" id="adminPassword" class="login-input" placeholder="Contraseña" autocomplete="current-password" required>
             <button id="submitLogin" class="btn-login">Iniciar Sesión</button>
-            <div style="margin-top: 12px; padding: 8px; background: rgba(40, 30, 20, 0.6); border-radius: 6px; font-size: 0.75rem; color: var(--muted);">
-                <strong>ℹ️ Instrucciones:</strong> Pega URL directa de Imgur, ImgBB o Google Drive
+            <div style="margin-top: 15px; padding: 10px; background: rgba(40, 30, 20, 0.7); border-radius: 8px; font-size: 0.85rem; color: var(--muted);">
+                <strong>ℹ️ Instrucciones para imágenes:</strong><br>
+                Pega el link directo de Imgur, ImgBB o Google Drive<br>
+                <strong>Ejemplo ImgBB:</strong><br>
+                <code>https://i.ibb.co/XXXX/tu-imagen.jpg</code>
             </div>
         </div>
     </div>
@@ -591,14 +609,16 @@
         </div>
     </div>
 
-    <!-- Firebase SDK - URLs CORREGIDAS (sin espacios) -->
+    <!-- Firebase SDK - SIN ESPACIOS EN URLs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- PapaParse - SIN ESPACIOS -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     
     <script>
-        // ✅ CONFIGURACIÓN FIREBASE (idéntica a impresoras)
+        // CONFIGURACIÓN DE FIREBASE (CORRECTA)
         const firebaseConfig = {
             apiKey: "AIzaSyDlOJqBgd-8KqUT-Y94lsma5W8T79PsPjM",
             authDomain: "trifusion-cotizador.firebaseapp.com",
@@ -608,29 +628,40 @@
             appId: "1:407374211882:web:b692792ccc39c8d48f4c53"
         };
         
+        // Initialize Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
+        
         const auth = firebase.auth();
         const db = firebase.firestore();
-
-        // ✅ CONFIGURACIÓN MONITORES - URL CORREGIDA (SIN ESPACIOS)
+        
+        // CONFIGURACIÓN PARA MONITORES (CORREGIDA)
         const SHEET_ID = "1dJ6IGB75oVPaWcWrQjzwjrCeZEmXwlw7";
         const GID = "1636359945";
-        // 🔥 URL CORREGIDA: SIN ESPACIOS después de /d/
+        // URL CORREGIDA: SIN ESPACIOS, SINTAXIS VÁLIDA
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
+        const cont = document.getElementById("catalogo");
+        const buscador = document.getElementById("buscadorProductos");
+        const mensajeVacio = document.getElementById("mensajeVacio");
+        const loginModal = document.getElementById("loginModal");
+        const imageModal = document.getElementById("imageModal");
+        const modalImage = document.getElementById("modalImage");
+        const closeModal = document.querySelector(".close-modal");
+        const loginBtn = document.getElementById("btnLogin");
+        const logoutBtn = document.getElementById("btnLogout");
+        const submitLogin = document.getElementById("submitLogin");
 
         let esAdmin = false;
         let todosLosProductos = [];
-        let mapaHuellas = {};
+        let mapaHuellas = {}; // huella → { id, imageUrl }
 
-        // =========================
-        // FUNCIONES AUXILIARES (idénticas a impresoras)
-        // =========================
+        // FUNCIONES AUXILIARES
         function limpiarEmojis(txt) {
             return txt.replace(/[\u{1F300}-\u{1FAFF}]/gu, "").trim();
         }
 
+        // GENERAR HUELLA ESTABLE DEL PRODUCTO
         function generarHuella(nombre) {
             return nombre
                 .toLowerCase()
@@ -641,274 +672,344 @@
                 .trim();
         }
 
-        // Detectar categorías de monitores (igual que impresoras pero con marcas de monitores)
+        // DETECTAR CATEGORÍAS DE MONITORES (CORREGIDO)
         function esCategoria(row) {
+            // Verificar que la fila tenga al menos 1 columna
             if (!row || row.length === 0) return false;
+            
             const texto = (row[0] || "").trim().toUpperCase();
+            
+            // Verificar que la fila tenga al menos 7 columnas antes de acceder a row[6]
             const precio = (row.length > 6) ? (row[6] || "").trim() : "";
+            
+            // Si tiene precio, NO es categoría
             if (precio && precio.startsWith("RD$")) return false;
+            
+            // Categorías válidas en tu Sheet de monitores
             return texto.includes("MONITOR SAMSUNG") || 
                    texto.includes("MONITOR MSI") || 
                    texto.includes("MONITOR AOC") || 
                    texto.includes("MONITOR HP");
         }
 
-        // =========================
-        // INICIALIZACIÓN (idéntica estructura a impresoras)
-        // =========================
-        document.addEventListener("DOMContentLoaded", async () => {
-            const cont = document.getElementById("catalogo");
-            const buscador = document.getElementById("buscadorProductos");
-            const mensajeVacio = document.getElementById("mensajeVacio");
-            const loginModal = document.getElementById("loginModal");
-            const imageModal = document.getElementById("imageModal");
-            const modalImage = document.getElementById("modalImage");
-            const closeModal = document.querySelector(".close-modal");
-            const loginBtn = document.getElementById("btnLogin");
-            const logoutBtn = document.getElementById("btnLogout");
-            const submitLogin = document.getElementById("submitLogin");
-
-            // ✅ Verificar Sheet (igual que impresoras)
+        // CARGA DE HUELLAS DESDE FIRESTORE
+        async function precargarHuellas() {
             try {
-                const testResp = await fetch(CSV_URL, { method: 'HEAD' });
-                if (!testResp.ok) throw new Error();
-            } catch {
-                cont.innerHTML = `<div style="text-align:center;padding:30px;color:var(--danger);background:rgba(40,20,20,0.3);border-radius:10px;margin:15px">⚠️ Sheet no publicado. Verifica Google Sheets.</div>`;
+                // USAMOS COLECCIÓN "monitores"
+                const snapshot = await db.collection("monitores").get();
+                mapaHuellas = {};
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.huella) {
+                        mapaHuellas[data.huella] = {
+                            id: doc.id,
+                            imageUrl: data.imageUrl || "",
+                            updatedAt: data.updatedAt?.toDate?.() || null
+                        };
+                    }
+                });
+                console.log(`✅ ${Object.keys(mapaHuellas).length} huellas de monitores cargadas`);
+            } catch (error) {
+                console.error("⚠️ Error cargando huellas de monitores:", error);
+            }
+        }
+
+        // AUTENTICACIÓN
+        loginBtn.addEventListener("click", () => {
+            loginModal.classList.add("active");
+        });
+
+        logoutBtn.addEventListener("click", () => {
+            auth.signOut();
+        });
+
+        submitLogin.addEventListener("click", () => {
+            const email = document.getElementById("adminEmail").value.trim();
+            const password = document.getElementById("adminPassword").value.trim();
+            
+            if (!email || !password) {
+                alert("Por favor ingresa correo y contraseña");
                 return;
             }
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .catch(error => {
+                    let message = "Error al iniciar sesión. ";
+                    if (error.code === "auth/invalid-email") {
+                        message += "Correo electrónico inválido.";
+                    } else if (error.code === "auth/wrong-password") {
+                        message += "Contraseña incorrecta.";
+                    } else if (error.code === "auth/user-not-found") {
+                        message += "Usuario no encontrado.";
+                    } else {
+                        message += error.message;
+                    }
+                    alert(message);
+                });
+        });
 
-            // =========================
-            // CARGA DE HUELLAS (colección "monitores")
-            // =========================
-            async function precargarHuellas() {
-                try {
-                    // ✅ Colección "monitores" en lugar de "printers"
-                    const snapshot = await db.collection("monitores").get();
-                    mapaHuellas = {};
-                    snapshot.forEach(doc => {
-                        const data = doc.data();
-                        if (data.huella) {
-                            mapaHuellas[data.huella] = {
-                                id: doc.id,
-                                imageUrl: data.imageUrl || "",
-                                updatedAt: data.updatedAt?.toDate?.() || null
-                            };
-                        }
-                    });
-                    console.log(`✅ ${Object.keys(mapaHuellas).length} huellas de monitores cargadas`);
-                } catch (error) {
-                    console.error("Error huellas:", error);
-                }
+        closeModal.addEventListener("click", () => {
+            imageModal.classList.remove("active");
+        });
+
+        imageModal.addEventListener("click", (e) => {
+            if (e.target === imageModal) {
+                imageModal.classList.remove("active");
             }
+        });
 
-            // =========================
-            // EVENTOS (idénticos a impresoras)
-            // =========================
-            closeModal.addEventListener("click", () => imageModal.classList.remove("active"));
-            imageModal.addEventListener("click", (e) => { if (e.target === imageModal) imageModal.classList.remove("active"); });
-            loginModal.addEventListener("click", (e) => { if (e.target === loginModal) loginModal.classList.remove("active"); });
-            loginBtn.addEventListener("click", () => loginModal.classList.add("active"));
-            logoutBtn.addEventListener("click", () => auth.signOut());
+        loginModal.addEventListener("click", (e) => {
+            if (e.target === loginModal) {
+                loginModal.classList.remove("active");
+            }
+        });
 
-            submitLogin.addEventListener("click", () => {
-                const email = document.getElementById("adminEmail").value.trim();
-                const password = document.getElementById("adminPassword").value.trim();
-                if (!email || !password) {
-                    alert("Ingresa correo y contraseña");
+        // Observador de estado de autenticación
+        auth.onAuthStateChanged(user => {
+            esAdmin = !!user;
+            loginBtn.style.display = esAdmin ? "none" : "inline-flex";
+            logoutBtn.style.display = esAdmin ? "inline-flex" : "none";
+            document.getElementById("adminEmail").value = "";
+            document.getElementById("adminPassword").value = "";
+            loginModal.classList.remove("active");
+            cargarCatalogo();
+        });
+
+        // CARGAR CATÁLOGO DE MONITORES
+        async function cargarCatalogo() {
+            try {
+                cont.innerHTML = '<div style="text-align:center;padding:30px;color:var(--accent)">Cargando monitores...</div>';
+                
+                // Cargar huellas de Firestore PRIMERO
+                await precargarHuellas();
+                
+                // Cargar CSV de monitores
+                const resp = await fetch(CSV_URL);
+                if (!resp.ok) throw new Error(`Error al cargar: ${resp.status}`);
+                
+                const csv = await resp.text();
+                
+                Papa.parse(csv, {
+                    skipEmptyLines: true,
+                    complete: (results) => {
+                        todosLosProductos = results.data;
+                        renderCatalogo(results.data);
+                    },
+                    error: (err) => {
+                        console.error("Error parsing CSV:", err);
+                        cont.innerHTML = `<div id="mensajeVacio" style="text-align:center;padding:30px;color:var(--danger)">❌ Error al procesar el catálogo</div>`;
+                    }
+                });
+            } catch (error) {
+                console.error("Error fetching catalog:", error);
+                cont.innerHTML = `<div id="mensajeVacio" style="text-align:center;padding:30px;color:var(--danger)">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        function renderCatalogo(rows) {
+            cont.innerHTML = "";
+            const filtro = buscador.value.trim().toLowerCase();
+            let productosMostrados = 0;
+            
+            rows.forEach(row => {
+                // VALIDACIÓN: Verificar que la fila tenga al menos 7 columnas
+                if (!row || row.length < 7) return;
+                
+                // Columna A: descripción completa (índice 0)
+                // Columna G: precio (índice 6)
+                const descripcionCompleta = (row[0] || "").trim();
+                const precioRaw = (row[6] || "").trim();
+                
+                // Renderizar categoría
+                if (esCategoria(row)) {
+                    const textoCategoria = limpiarEmojis(descripcionCompleta);
+                    const catEl = document.createElement("div");
+                    catEl.className = "categoria";
+                    catEl.innerHTML = `<div style="padding:14px 18px;background:rgba(0,194,255,0.25);border-left:6px solid #00c2ff;font-weight:800;letter-spacing:.18em;text-transform:uppercase">${textoCategoria}</div>`;
+                    cont.appendChild(catEl);
                     return;
                 }
-                auth.signInWithEmailAndPassword(email, password).catch(error => {
-                    let msg = "Error al iniciar sesión. ";
-                    if (error.code === "auth/invalid-email") msg += "Correo inválido.";
-                    else if (error.code === "auth/wrong-password") msg += "Contraseña incorrecta.";
-                    else if (error.code === "auth/user-not-found") msg += "Usuario no encontrado.";
-                    else msg += error.message;
-                    alert(msg);
-                });
-            });
-
-            auth.onAuthStateChanged(async (user) => {
-                esAdmin = !!user;
-                loginBtn.style.display = esAdmin ? "none" : "inline-flex";
-                logoutBtn.style.display = esAdmin ? "inline-flex" : "none";
-                document.getElementById("adminEmail").value = "";
-                document.getElementById("adminPassword").value = "";
-                loginModal.classList.remove("active");
-                await cargarCatalogo();
-            });
-
-            // =========================
-            // CARGAR CATÁLOGO (idéntica lógica a impresoras)
-            // =========================
-            async function cargarCatalogo() {
-                try {
-                    cont.innerHTML = '<div style="text-align:center;padding:30px;color:var(--accent);font-size:1.1rem">Cargando monitores...</div>';
-                    await precargarHuellas();
-                    const resp = await fetch(CSV_URL);
-                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-                    const csv = await resp.text();
-                    Papa.parse(csv, {
-                        skipEmptyLines: true,
-                        complete: (results) => {
-                            todosLosProductos = results.data;
-                            renderCatalogo(results.data);
-                        },
-                        error: (err) => {
-                            console.error("PapaParse error:", err);
-                            cont.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--danger)">❌ Error procesando CSV</div>`;
-                        }
-                    });
-                } catch (error) {
-                    console.error("Error:", error);
-                    cont.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--danger)">❌ Error: ${error.message}</div>`;
-                }
-            }
-
-            // =========================
-            // RENDER CATÁLOGO (idéntico layout horizontal a impresoras)
-            // =========================
-            function renderCatalogo(rows) {
-                cont.innerHTML = "";
-                const filtro = buscador.value.trim().toLowerCase();
-                let productosMostrados = 0;
                 
-                rows.forEach(row => {
-                    if (!row || row.length < 7) return;
-                    
-                    const descripcionCompleta = (row[0] || "").trim();
-                    const precioRaw = (row[6] || "").trim();
-                    
-                    // Categoría (igual que impresoras)
-                    if (esCategoria(row)) {
-                        const catEl = document.createElement("div");
-                        catEl.className = "categoria";
-                        catEl.innerHTML = `<div style="padding:14px 18px;background:rgba(0,194,255,0.25);border-left:6px solid #00c2ff;font-weight:800;letter-spacing:.18em;text-transform:uppercase">${limpiarEmojis(descripcionCompleta)}</div>`;
-                        cont.appendChild(catEl);
-                        return;
-                    }
-                    
-                    // Validar producto
-                    if (!descripcionCompleta || !precioRaw || !precioRaw.startsWith("RD$")) return;
-                    if (filtro && !descripcionCompleta.toLowerCase().includes(filtro)) return;
-                    
-                    const nombreLimpio = limpiarEmojis(descripcionCompleta);
-                    const huella = generarHuella(nombreLimpio);
-                    const datosProducto = mapaHuellas[huella] || { id: null, imageUrl: "" };
-                    const imageUrl = datosProducto.imageUrl;
-                    
-                    // ✅ DISEÑO HORIZONTAL IDÉNTICO A IMPRESORAS
-                    const prodEl = document.createElement("div");
-                    prodEl.className = "producto";
-                    
-                    let html = `
-                        <div class="producto-content">
-                            <div class="descripcion">${nombreLimpio}</div>
-                            ${imageUrl ? `<div class="producto-img-container">
-                                <img src="${imageUrl}" alt="${nombreLimpio}" class="producto-img" referrerpolicy="no-referrer">
-                            </div>` : ''}
+                // VALIDACIÓN: Saltar filas sin descripción o sin precio válido
+                if (!descripcionCompleta || !precioRaw || !precioRaw.startsWith("RD$")) return;
+                
+                // Aplicar filtro de búsqueda
+                if (filtro && !descripcionCompleta.toLowerCase().includes(filtro)) return;
+                
+                // Generar nombre limpio y huella estable
+                const nombreLimpio = limpiarEmojis(descripcionCompleta);
+                const huella = generarHuella(nombreLimpio);
+                
+                // Obtener datos del producto desde el mapa de huellas
+                const datosProducto = mapaHuellas[huella] || { id: null, imageUrl: "" };
+                const imageUrl = datosProducto.imageUrl;
+                
+                // Crear elemento de producto
+                const prodEl = document.createElement("div");
+                prodEl.className = "producto";
+                
+                // HTML del producto - PRECIO EXACTO COMO EN EL SHEET (SIN IMPUESTOS)
+                let htmlProducto = `
+                    <div class="producto-content">
+                        <div class="descripcion">${nombreLimpio}</div>
+                `;
+                
+                // Mostrar imagen si existe
+                if (imageUrl) {
+                    htmlProducto += `
+                        <div class="producto-img-container">
+                            <img src="${imageUrl}" alt="${nombreLimpio}" class="producto-img" referrerpolicy="no-referrer">
                         </div>
-                        <div class="producto-right">
-                            <div class="precio">${precioRaw}</div>
                     `;
-                    
-                    if (esAdmin) {
-                        html += `
-                            <div class="admin-section">
-                                <h4>📸 Imagen</h4>
-                                <input type="text" class="admin-input image-url" placeholder="URL de imagen" value="${imageUrl || ''}">
-                                <div class="admin-actions">
-                                    <button class="btn btn-save-img save-image" data-huella="${huella}" data-nombre="${nombreLimpio}">💾 Guardar</button>
-                                    ${imageUrl ? `<button class="btn btn-delete-img delete-image" data-huella="${huella}" data-nombre="${nombreLimpio}">🗑️ Eliminar</button>` : ''}
-                                </div>
+                }
+                
+                htmlProducto += `
+                    </div>
+                    <div class="producto-right">
+                        <div class="precio">${precioRaw}</div> <!-- PRECIO EXACTO SIN MODIFICAR -->
+                `;
+                
+                // Sección de administración si es admin
+                if (esAdmin) {
+                    htmlProducto += `
+                        <div class="admin-section">
+                            <h4>📸 Imagen del Monitor</h4>
+                            <input type="text" class="admin-input image-url" placeholder="Pega URL de imagen" value="${imageUrl}">
+                            <div class="admin-actions">
+                                <button class="btn btn-save-img save-image" data-huella="${huella}" data-nombre="${nombreLimpio}">💾 Guardar</button>
+                                ${imageUrl ? `<button class="btn btn-delete-img delete-image" data-huella="${huella}" data-nombre="${nombreLimpio}">🗑️ Eliminar</button>` : ''}
                             </div>
-                        `;
-                    }
+                        </div>
+                    `;
+                }
+                
+                htmlProducto += `</div>`;
+                prodEl.innerHTML = htmlProducto;
+                
+                // Evento para ver imagen en modal
+                if (imageUrl) {
+                    const imgEl = prodEl.querySelector(".producto-img");
+                    imgEl.addEventListener("click", (e) => {
+                        e.stopPropagation();
+                        modalImage.src = imageUrl;
+                        imageModal.classList.add("active");
+                    });
+                }
+                
+                // Eventos de administración
+                if (esAdmin) {
+                    const saveBtn = prodEl.querySelector(".save-image");
+                    const deleteBtn = prodEl.querySelector(".delete-image");
+                    const urlInput = prodEl.querySelector(".image-url");
+                    const huellaActual = huella;
+                    const nombreProducto = nombreLimpio;
                     
-                    html += `</div>`;
-                    prodEl.innerHTML = html;
-                    
-                    // Eventos (idénticos a impresoras)
-                    if (imageUrl) {
-                        const img = prodEl.querySelector(".producto-img");
-                        if (img) {
-                            img.addEventListener("click", (e) => {
-                                e.stopPropagation();
-                                modalImage.src = imageUrl;
-                                imageModal.classList.add("active");
-                            });
-                        }
-                    }
-                    
-                    if (esAdmin) {
-                        const saveBtn = prodEl.querySelector(".save-image");
-                        const deleteBtn = prodEl.querySelector(".delete-image");
-                        const urlInput = prodEl.querySelector(".image-url");
-                        const huellaActual = huella;
-                        const nombreProducto = nombreLimpio;
-                        
-                        if (saveBtn) {
-                            saveBtn.addEventListener("click", async () => {
-                                const url = urlInput.value.trim();
-                                if (!url) {
-                                    alert("URL válida requerida");
-                                    return;
-                                }
-                                try {
-                                    const existe = mapaHuellas[huellaActual];
-                                    if (existe?.id) {
-                                        await db.collection("monitores").doc(existe.id).update({
-                                            imageUrl: url,
-                                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                                        });
-                                    } else {
-                                        await db.collection("monitores").add({
-                                            huella: huellaActual,
-                                            imageUrl: url,
-                                            nombreOriginal: nombreProducto,
-                                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                                        });
-                                    }
-                                    alert(`✅ Imagen guardada`);
-                                    await precargarHuellas();
-                                    renderCatalogo(todosLosProductos);
-                                } catch (err) {
-                                    alert("Error: " + err.message);
-                                }
-                            });
-                        }
-                        
-                        if (deleteBtn) {
-                            deleteBtn.addEventListener("click", async () => {
-                                if (!confirm(`¿Eliminar imagen?`)) return;
-                                const existe = mapaHuellas[huellaActual];
-                                if (!existe?.id) {
-                                    alert("No hay imagen");
-                                    return;
-                                }
-                                try {
+                    if (saveBtn && urlInput) {
+                        saveBtn.addEventListener("click", async () => {
+                            const url = urlInput.value.trim();
+                            if (!url) {
+                                alert("Por favor ingresa una URL válida");
+                                return;
+                            }
+                            
+                            const existe = mapaHuellas[huellaActual];
+                            
+                            try {
+                                // USAMOS COLECCIÓN "monitores"
+                                if (existe?.id) {
                                     await db.collection("monitores").doc(existe.id).update({
-                                        imageUrl: firebase.firestore.FieldValue.delete(),
+                                        imageUrl: url,
                                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                                     });
-                                    alert(`✅ Eliminada`);
-                                    await precargarHuellas();
-                                    renderCatalogo(todosLosProductos);
-                                } catch (err) {
-                                    alert("Error: " + err.message);
+                                } else {
+                                    await db.collection("monitores").add({
+                                        huella: huellaActual,
+                                        imageUrl: url,
+                                        nombreOriginal: nombreProducto,
+                                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                                    });
                                 }
-                            });
-                        }
+                                
+                                alert(`✅ Imagen guardada para "${nombreProducto}"`);
+                                await precargarHuellas();
+                                renderCatalogo(todosLosProductos);
+                            } catch (error) {
+                                console.error("Error guardando imagen:", error);
+                                alert("Error al guardar la imagen: " + error.message);
+                            }
+                        });
                     }
                     
-                    cont.appendChild(prodEl);
-                    productosMostrados++;
-                });
+                    if (deleteBtn) {
+                        deleteBtn.addEventListener("click", async () => {
+                            if (!confirm(`¿Eliminar la imagen de "${nombreProducto}"?`)) return;
+                            
+                            const existe = mapaHuellas[huellaActual];
+                            
+                            if (!existe?.id) {
+                                alert("No hay imagen para eliminar");
+                                return;
+                            }
+                            
+                            try {
+                                await db.collection("monitores").doc(existe.id).update({
+                                    imageUrl: firebase.firestore.FieldValue.delete(),
+                                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                                });
+                                
+                                alert(`✅ Imagen eliminada para "${nombreProducto}"`);
+                                await precargarHuellas();
+                                renderCatalogo(todosLosProductos);
+                            } catch (error) {
+                                console.error("Error eliminando imagen:", error);
+                                alert("Error al eliminar la imagen: " + error.message);
+                            }
+                        });
+                    }
+                }
                 
-                mensajeVacio.style.display = productosMostrados === 0 ? "block" : "none";
+                cont.appendChild(prodEl);
+                productosMostrados++;
+            });
+            
+            // Mostrar mensaje si no hay productos
+            mensajeVacio.style.display = productosMostrados === 0 ? "block" : "none";
+            if (productosMostrados === 0 && cont.children.length === 0) {
+                cont.innerHTML = `<div id="mensajeVacio">No se encontraron monitores.</div>`;
             }
+        }
 
-            buscador.addEventListener("input", () => renderCatalogo(todosLosProductos));
+        // EVENTOS
+        buscador.addEventListener("input", (e) => {
+            renderCatalogo(todosLosProductos);
         });
+
+        // Cargar catálogo al iniciar
+        window.addEventListener("DOMContentLoaded", cargarCatalogo);
     </script>
 </body>
 </html>
+
+
+
+              <script>
+                              rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ... tus otras reglas existentes ...
+    
+    // ✅ REGLA PARA MONITORES (AGREGA ESTO)
+    match /monitores/{monitorId} {
+      allow read: if true;  // Público puede ver
+      allow write: if request.auth != null;  // Solo admin puede editar
+    }
+    
+    // ... resto de tus reglas ...
+  }
+}
+
+
+              </script>
+                        </body>
+                        </html>
+                    
