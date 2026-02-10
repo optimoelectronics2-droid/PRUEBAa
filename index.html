@@ -1,9 +1,24 @@
-<!DOCTYPE html>
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body {
+                  background-color: white; /* Ensure the iframe has a white background */
+                }
+
+                
+              </style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitores - Trifusion Technologies</title>
+    <title>Impresoras - Trifusion Technologies</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         :root {
             --bg: #0b0f19;
@@ -552,7 +567,7 @@
 <body>
     <header>
         <div class="logo-title">
-            <h1>Trifusion Technologies - Monitores</h1>
+            <h1>Trifusion Technologies - Impresoras</h1>
         </div>
         <div class="header-contact">
             📍 Santo Domingo<br>
@@ -562,7 +577,7 @@
 
     <div class="toolbar">
         <div class="panel">
-            <div class="panel-title">Buscar monitores</div>
+            <div class="panel-title">Buscar impresoras</div>
             <input id="buscadorProductos" type="text" placeholder="Escribe el modelo o parte del nombre...">
         </div>
         <div class="panel">
@@ -574,7 +589,7 @@
 
     <div class="catalogo-wrapper">
         <div id="catalogo" class="catalogo"></div>
-        <div id="mensajeVacio" style="display:none;">No se encontraron monitores.</div>
+        <div id="mensajeVacio" style="display:none;">No se encontraron impresoras.</div>
     </div>
 
     <!-- MODAL DE LOGIN -->
@@ -584,6 +599,12 @@
             <input type="email" id="adminEmail" class="login-input" placeholder="Correo electrónico" autocomplete="email" required>
             <input type="password" id="adminPassword" class="login-input" placeholder="Contraseña" autocomplete="current-password" required>
             <button id="submitLogin" class="btn-login">Iniciar Sesión</button>
+            <div style="margin-top: 15px; padding: 10px; background: rgba(40, 30, 20, 0.7); border-radius: 8px; font-size: 0.85rem; color: var(--muted);">
+                <strong>ℹ️ Instrucciones para imágenes:</strong><br>
+                Pega el link directo de Imgur, ImgBB o Google Drive<br>
+                <strong>Ejemplo ImgBB:</strong><br>
+                <code>https://i.ibb.co/XXXX/tu-imagen.jpg</code>
+            </div>
         </div>
     </div>
 
@@ -591,27 +612,46 @@
     <div id="imageModal" class="image-modal">
         <div class="image-modal-content">
             <button class="close-modal">&times;</button>
-            <img id="modalImage" class="image-modal-img" src="" alt="Imagen del monitor">
+            <img id="modalImage" class="image-modal-img" src="" alt="Imagen de la impresora">
         </div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK - CORREGIDO: SIN ESPACIOS EN URLs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     
-    <!-- PapaParse -->
+    <!-- PapaParse - CORREGIDO: SIN ESPACIOS -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     
-    <!-- Firebase Config -->
-    <script src="firebase-config.js"></script>
+    <!-- Firebase Config - INTEGRADA DIRECTAMENTE (como en tu página funcional) -->
+    <script>
+        // TU CONFIGURACIÓN REAL DE FIREBASE (idéntica a tu página funcional)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDlOJqBgd-8KqUT-Y94lsma5W8T79PsPjM",
+            authDomain: "trifusion-cotizador.firebaseapp.com",
+            projectId: "trifusion-cotizador",
+            storageBucket: "trifusion-cotizador.firebasestorage.app",
+            messagingSenderId: "407374211882",
+            appId: "1:407374211882:web:b692792ccc39c8d48f4c53"
+        };
+        
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+    </script>
     
     <script>
         // =========================
-        // CONFIGURACIÓN PARA MONITORES
+        // CONFIGURACIÓN PARA IMPRESORAS (CORREGIDA)
         // =========================
-        const SHEET_ID = "1dJ6IGB75oVPaWcWrQjzwjrCeZEmXwlw7";
-        const GID = "1636359945"; // ID de la hoja de monitores
+        const SHEET_ID = "1rl15lecq23hYfE9z0Q-Vyi7kOR8CI9dl";
+        const GID = "1406001802"; // ID de la hoja de impresoras
+        // 🔥 URL CORREGIDA: SIN ESPACIOS, SINTAXIS VÁLIDA
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
         const IMPUESTO = 1.22; // 22% de impuesto
         const cont = document.getElementById("catalogo");
@@ -651,25 +691,19 @@
             return "$" + num.toLocaleString("es-DO");
         }
 
-        // Detectar categorías de monitores
+        // Detectar categorías de impresoras
         function esCategoria(row) {
-            // Verificar que la fila tenga al menos 7 columnas
-            if (!row || row.length < 7) return false;
-            
             // Las categorías están en la primera columna y contienen uno de estos textos
             const texto = (row[0] || "").trim().toUpperCase();
             const categoriasValidas = [
-                "MONITOR SAMSUNG",
-                "MONITOR MSI",
-                "MONITOR AOC",
-                "MONITOR HP"
+                "IMPRESORAS EPSON",
+                "IMPRESORAS HP",
+                "IMPRESORAS BROTHER",
+                "IMPRESORAS CANON"
             ];
             
             // Verificar si el texto contiene alguna de las categorías válidas
-            // Y que NO tenga precio en la columna G (índice 6)
-            const tienePrecio = (row[6] || "").trim().startsWith("RD$");
-            
-            return categoriasValidas.some(cat => texto.includes(cat)) && !tienePrecio;
+            return categoriasValidas.some(cat => texto.includes(cat));
         }
 
         // =========================
@@ -677,8 +711,8 @@
         // =========================
         async function precargarHuellas() {
             try {
-                // Usamos la colección "monitors" para no mezclar con productos
-                const snapshot = await db.collection("monitors").get();
+                // Usamos la colección "printers" para no mezclar con productos
+                const snapshot = await db.collection("printers").get();
                 mapaHuellas = {};
                 snapshot.forEach(doc => {
                     const data = doc.data();
@@ -690,9 +724,9 @@
                         };
                     }
                 });
-                console.log(`✅ ${Object.keys(mapaHuellas).length} huellas de monitores cargadas`);
+                console.log(`✅ ${Object.keys(mapaHuellas).length} huellas de impresoras cargadas`);
             } catch (error) {
-                console.error("⚠️ Error cargando huellas de monitores:", error);
+                console.error("⚠️ Error cargando huellas de impresoras:", error);
             }
         }
 
@@ -760,16 +794,16 @@
         });
 
         // =========================
-        // CARGAR CATÁLOGO DE MONITORES
+        // CARGAR CATÁLOGO DE IMPRESORAS
         // =========================
         async function cargarCatalogo() {
             try {
-                cont.innerHTML = '<div style="text-align:center;padding:30px;color:var(--accent)">Cargando monitores...</div>';
+                cont.innerHTML = '<div style="text-align:center;padding:30px;color:var(--accent)">Cargando impresoras...</div>';
                 
                 // Cargar huellas de Firestore PRIMERO
                 await precargarHuellas();
                 
-                // Cargar CSV de monitores
+                // Cargar CSV de impresoras
                 const resp = await fetch(CSV_URL);
                 if (!resp.ok) throw new Error(`Error al cargar: ${resp.status}`);
                 
@@ -783,12 +817,12 @@
                     },
                     error: (err) => {
                         console.error("Error parsing CSV:", err);
-                        cont.innerHTML = `<div class="status-error">❌ Error al procesar el catálogo</div>`;
+                        cont.innerHTML = `<div id="mensajeVacio" style="text-align:center;padding:30px;color:var(--danger)">❌ Error al procesar el catálogo</div>`;
                     }
                 });
             } catch (error) {
                 console.error("Error fetching catalog:", error);
-                cont.innerHTML = `<div class="status-error">❌ Error: ${error.message}</div>`;
+                cont.innerHTML = `<div id="mensajeVacio" style="text-align:center;padding:30px;color:var(--danger)">❌ Error: ${error.message}</div>`;
             }
         }
 
@@ -798,21 +832,14 @@
             let productosMostrados = 0;
             
             rows.forEach(row => {
-                // Validar que la fila tenga al menos 7 columnas
-                if (!row || row.length < 7) {
-                    console.warn("Fila con menos de 7 columnas, ignorada");
-                    return;
-                }
-                
-                // Columna A: descripción (índice 0)
-                const descripcionCompleta = (row[0] || "").trim();
-                
-                // Columna G: precio (índice 6)
-                const precioRaw = (row[6] || "").trim();
+                // Columnas A-G: descripción (índices 0-6)
+                // Columna H: precio (índice 7)
+                const descripcionCompleta = row.slice(0, 7).map(cell => (cell || "").trim()).filter(cell => cell !== "").join(" ");
+                const precioRaw = (row[7] || "").trim();
                 
                 // Renderizar categoría
                 if (esCategoria(row)) {
-                    const textoCategoria = limpiarEmojis(descripcionCompleta);
+                    const textoCategoria = limpiarEmojis((row[0] || "").trim());
                     const catEl = document.createElement("div");
                     catEl.className = "categoria";
                     catEl.innerHTML = `<div style="padding:14px 18px;background:rgba(0,194,255,0.25);border-left:6px solid #00c2ff;font-weight:800;letter-spacing:.18em;text-transform:uppercase">${textoCategoria}</div>`;
@@ -821,25 +848,17 @@
                 }
                 
                 // Saltar filas sin descripción o sin precio
-                if (!descripcionCompleta || !precioRaw) {
-                    return;
-                }
+                if (!descripcionCompleta || !precioRaw) return;
                 
                 // Saltar si no es un precio válido (debe empezar con RD$)
-                if (!precioRaw.startsWith("RD$")) {
-                    return;
-                }
+                if (!precioRaw.startsWith("RD$")) return;
                 
                 // Aplicar filtro de búsqueda
-                if (filtro && !descripcionCompleta.toLowerCase().includes(filtro)) {
-                    return;
-                }
+                if (filtro && !descripcionCompleta.toLowerCase().includes(filtro)) return;
                 
                 // Extraer y limpiar el precio
                 const precioLimpio = precioRaw.replace(/[^0-9]/g, "");
-                if (!precioLimpio) {
-                    return;
-                }
+                if (!precioLimpio) return;
                 
                 // Calcular precio con impuesto (22%)
                 const precioConImpuesto = Math.round(parseFloat(precioLimpio) * IMPUESTO);
@@ -881,7 +900,7 @@
                 if (esAdmin) {
                     htmlProducto += `
                         <div class="admin-section">
-                            <h4>📸 Imagen del Monitor</h4>
+                            <h4>📸 Imagen de la Impresora</h4>
                             <input type="text" class="admin-input image-url" placeholder="Pega URL de imagen" value="${imageUrl}">
                             <div class="admin-actions">
                                 <button class="btn btn-save-img save-image" data-huella="${huella}" data-nombre="${nombreLimpio}">💾 Guardar</button>
@@ -923,14 +942,14 @@
                             const existe = mapaHuellas[huellaActual];
                             
                             try {
-                                // Usamos la colección "monitors" para no mezclar con productos
+                                // Usamos la colección "printers" para no mezclar con productos
                                 if (existe?.id) {
-                                    await db.collection("monitors").doc(existe.id).update({
+                                    await db.collection("printers").doc(existe.id).update({
                                         imageUrl: url,
                                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                                     });
                                 } else {
-                                    await db.collection("monitors").add({
+                                    await db.collection("printers").add({
                                         huella: huellaActual,
                                         imageUrl: url,
                                         nombreOriginal: nombreProducto,
@@ -961,7 +980,7 @@
                             
                             try {
                                 // Solo eliminamos el campo imageUrl, NO el documento
-                                await db.collection("monitors").doc(existe.id).update({
+                                await db.collection("printers").doc(existe.id).update({
                                     imageUrl: firebase.firestore.FieldValue.delete(),
                                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                                 });
@@ -983,6 +1002,9 @@
             
             // Mostrar mensaje si no hay productos
             mensajeVacio.style.display = productosMostrados === 0 ? "block" : "none";
+            if (productosMostrados === 0 && cont.children.length === 0) {
+                cont.innerHTML = `<div id="mensajeVacio">No se encontraron impresoras.</div>`;
+            }
         }
 
         // =========================
@@ -997,3 +1019,27 @@
     </script>
 </body>
 </html>
+
+
+
+              <script>
+                              rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ... tus otras reglas existentes ...
+    
+    // ✅ REGLA PARA IMPRESORAS (AGREGA ESTO)
+    match /printers/{printerId} {
+      allow read: if true;  // Público puede ver
+      allow write: if request.auth != null;  // Solo admin puede editar
+    }
+    
+    // ... resto de tus reglas ...
+  }
+}
+
+
+              </script>
+                        </body>
+                        </html>
+                    
