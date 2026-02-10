@@ -18,276 +18,309 @@
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: system-ui, Arial, sans-serif;
-            background: radial-gradient(circle at top, #172239 0, #050712 55%, #02030a 100%);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: radial-gradient(circle at top, #172239 0%, #050712 55%, #02030a 100%);
             color: var(--text);
-            line-height: 1.5;
-            padding-bottom: 40px;
+            line-height: 1.6;
+            padding-bottom: 30px;
         }
         
         header {
-            padding: 18px 16px;
-            background: rgba(0, 0, 0, 0.85);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            padding: 15px 15px;
+            background: rgba(0, 0, 0, 0.88);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
             position: sticky;
             top: 0;
             z-index: 100;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(8px);
         }
         
         .logo-title h1 {
-            font-size: 24px;
+            font-size: 1.5rem;
+            font-weight: 700;
             background: linear-gradient(90deg, var(--accent), #7b3fe4, #ff4b6a);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            font-weight: 800;
+            letter-spacing: -0.5px;
         }
         
         .header-contact {
-            font-size: 13px;
+            font-size: 0.75rem;
             color: var(--muted);
             text-align: right;
+            line-height: 1.3;
         }
         
         .toolbar {
-            max-width: 1100px;
-            margin: 18px auto 0;
-            padding: 0 16px;
+            max-width: 1200px;
+            margin: 15px auto 0;
+            padding: 0 15px;
             display: grid;
             grid-template-columns: 1fr auto;
-            gap: 12px;
+            gap: 10px;
         }
         
         .panel {
-            background: rgba(8, 12, 26, 0.9);
-            border-radius: 14px;
-            padding: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(8, 12, 26, 0.92);
+            border-radius: 12px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
         
         .panel-title {
-            font-size: 13px;
-            margin-bottom: 8px;
+            font-size: 0.75rem;
+            margin-bottom: 6px;
             color: var(--muted);
             text-transform: uppercase;
             letter-spacing: 0.1em;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
+            font-weight: 600;
         }
         
         .panel-title::before {
             content: "";
             display: inline-block;
-            width: 4px;
-            height: 14px;
+            width: 3px;
+            height: 12px;
             background: var(--accent);
             border-radius: 2px;
         }
         
         input[type="text"] {
             width: 100%;
-            background: #050815;
-            border-radius: 10px;
+            background: rgba(5, 8, 21, 0.9);
+            border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 10px 12px;
+            padding: 8px 10px;
             color: var(--text);
-            font-size: 15px;
+            font-size: 0.9rem;
             outline: none;
+            font-family: inherit;
         }
         
         input[type="text"]:focus {
             border-color: var(--accent);
-            box-shadow: 0 0 0 2px rgba(0, 194, 255, 0.2);
+            box-shadow: 0 0 0 2px rgba(0, 194, 255, 0.15);
         }
         
         button {
             border: none;
-            border-radius: 10px;
-            padding: 10px 18px;
-            font-size: 15px;
+            border-radius: 8px;
+            padding: 8px 15px;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             background: linear-gradient(135deg, var(--accent), #62e3ff);
             color: #02030a;
-            box-shadow: 0 4px 10px rgba(0, 194, 255, 0.3);
+            box-shadow: 0 3px 8px rgba(0, 194, 255, 0.25);
             white-space: nowrap;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
+            font-family: inherit;
         }
         
         button:hover {
             transform: translateY(-1px);
-            box-shadow: 0 6px 15px rgba(0, 194, 255, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 194, 255, 0.35);
         }
         
         .btn-admin {
             background: linear-gradient(135deg, #ff8a00, #ff4b6a);
+            box-shadow: 0 3px 8px rgba(255, 75, 106, 0.3);
+        }
+        
+        .btn-admin:hover {
+            box-shadow: 0 4px 12px rgba(255, 75, 106, 0.4);
         }
         
         .btn-logout {
             background: linear-gradient(135deg, #c53030, #822727);
+            box-shadow: 0 3px 8px rgba(197, 48, 48, 0.3);
             display: none;
         }
         
+        .btn-logout:hover {
+            box-shadow: 0 4px 12px rgba(197, 48, 48, 0.4);
+        }
+        
         .catalogo-wrapper {
-            max-width: 1100px;
-            margin: 20px auto;
-            padding: 0 16px;
+            max-width: 1200px;
+            margin: 15px auto;
+            padding: 0 15px;
         }
         
         .catalogo {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
         }
         
         .categoria {
             grid-column: 1 / -1;
-            padding: 14px 18px;
-            background: rgba(0, 194, 255, 0.25);
-            border-left: 6px solid #00c2ff;
-            font-weight: 800;
-            letter-spacing: 0.15em;
+            padding: 10px 15px;
+            background: rgba(0, 194, 255, 0.18);
+            border-left: 4px solid var(--accent);
+            font-weight: 700;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            border-radius: 0 12px 12px 0;
-            margin: 16px 0 8px;
-            font-size: 1.1rem;
+            border-radius: 0 10px 10px 0;
+            margin: 12px 0 6px;
+            font-size: 0.95rem;
+            color: var(--text);
         }
         
         .producto {
             background: var(--card);
-            border-radius: 14px;
-            padding: 16px;
+            border-radius: 12px;
+            padding: 12px;
             border: 1px solid var(--card-border);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            transition: all 0.25s ease;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
         
         .producto:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 194, 255, 0.2);
-            border-color: rgba(0, 194, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 194, 255, 0.18);
+            border-color: rgba(0, 194, 255, 0.35);
         }
         
         .producto-img-container {
             width: 100%;
-            height: 180px;
-            background: rgba(2, 3, 10, 0.8);
-            border-radius: 12px;
+            height: 160px;
+            background: rgba(2, 3, 10, 0.85);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            border: 1px solid rgba(31, 41, 64, 0.7);
+            border: 1px solid rgba(31, 41, 64, 0.6);
         }
         
         .producto-img {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            padding: 10px;
+            padding: 8px;
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: transform 0.25s ease;
         }
         
         .producto-img:hover {
-            transform: scale(1.05);
+            transform: scale(1.03);
         }
         
         .descripcion {
             color: var(--accent);
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             line-height: 1.4;
-            min-height: 60px;
+            min-height: 50px;
+            font-family: inherit;
         }
         
         .precio {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 800;
-            color: var(--danger);
             background: linear-gradient(90deg, #ff4b6a, #ff8a00);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
             margin-top: 4px;
+            font-family: inherit;
         }
         
         .admin-section {
-            background: rgba(30, 25, 50, 0.7);
-            border-radius: 10px;
-            padding: 12px;
-            margin-top: 8px;
-            border: 1px solid rgba(100, 80, 180, 0.5);
+            background: rgba(30, 25, 50, 0.6);
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid rgba(100, 80, 180, 0.4);
         }
         
         .admin-section h4 {
             color: #ffb703;
-            margin-bottom: 8px;
-            font-size: 1.05rem;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
+            font-weight: 600;
+            font-family: inherit;
         }
         
         .admin-input {
             width: 100%;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(100, 120, 180, 0.6);
-            background: rgba(10, 15, 30, 0.8);
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(100, 120, 180, 0.5);
+            background: rgba(10, 15, 30, 0.85);
             color: white;
-            margin: 6px 0;
+            margin: 5px 0;
             font-family: inherit;
-            font-size: 0.95rem;
+            font-size: 0.8rem;
         }
         
         .admin-actions {
             display: flex;
-            gap: 8px;
-            margin-top: 10px;
+            gap: 6px;
+            margin-top: 8px;
             flex-wrap: wrap;
         }
         
         .btn-save-img {
             flex: 1;
-            min-width: 100px;
+            min-width: 90px;
             background: linear-gradient(90deg, #00c853, #009629);
-            padding: 6px;
-            font-size: 0.9rem;
+            padding: 5px;
+            font-size: 0.75rem;
+            box-shadow: 0 2px 6px rgba(0, 200, 83, 0.3);
+        }
+        
+        .btn-save-img:hover {
+            box-shadow: 0 3px 8px rgba(0, 200, 83, 0.4);
         }
         
         .btn-delete-img {
             flex: 1;
-            min-width: 100px;
+            min-width: 90px;
             background: linear-gradient(90deg, #ff4b6a, #c53030);
-            padding: 6px;
-            font-size: 0.9rem;
+            padding: 5px;
+            font-size: 0.75rem;
+            box-shadow: 0 2px 6px rgba(255, 75, 106, 0.3);
+        }
+        
+        .btn-delete-img:hover {
+            box-shadow: 0 3px 8px rgba(255, 75, 106, 0.4);
         }
         
         #mensajeVacio {
             text-align: center;
-            padding: 40px;
+            padding: 30px 15px;
             color: var(--muted);
-            font-size: 1.2rem;
+            font-size: 1rem;
             grid-column: 1 / -1;
+            background: rgba(30, 25, 50, 0.3);
+            border-radius: 10px;
+            margin: 10px 0;
         }
         
         .login-modal {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.88);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            padding: 20px;
         }
         
         .login-modal.active {
@@ -295,52 +328,60 @@
         }
         
         .login-box {
-            background: rgba(20, 25, 40, 0.95);
-            border-radius: 16px;
-            padding: 30px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(100, 150, 255, 0.3);
+            background: rgba(20, 25, 40, 0.96);
+            border-radius: 14px;
+            padding: 25px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(100, 150, 255, 0.25);
         }
         
         .login-box h2 {
             text-align: center;
-            margin-bottom: 20px;
-            color: #00c2ff;
+            margin-bottom: 18px;
+            color: var(--accent);
             font-weight: 700;
+            font-size: 1.5rem;
+            font-family: inherit;
         }
         
         .login-input {
             width: 100%;
-            padding: 12px 15px;
-            border-radius: 10px;
-            border: 1px solid rgba(100, 120, 180, 0.6);
-            background: rgba(10, 15, 30, 0.8);
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(100, 120, 180, 0.55);
+            background: rgba(10, 15, 30, 0.85);
             color: white;
-            margin: 10px 0;
+            margin: 8px 0;
             font-family: inherit;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
         
         .btn-login {
             width: 100%;
-            padding: 12px;
-            background: linear-gradient(90deg, #00c2ff, #0077ff);
+            padding: 10px;
+            background: linear-gradient(90deg, var(--accent), #0077ff);
             color: white;
             font-weight: 700;
-            margin-top: 15px;
-            font-size: 1.05rem;
+            margin-top: 12px;
+            font-size: 1rem;
+            box-shadow: 0 3px 8px rgba(0, 194, 255, 0.3);
+        }
+        
+        .btn-login:hover {
+            box-shadow: 0 4px 12px rgba(0, 194, 255, 0.4);
         }
         
         .image-modal {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.92);
+            background: rgba(0, 0, 0, 0.94);
             display: none;
             align-items: center;
             justify-content: center;
             z-index: 2000;
+            padding: 20px;
         }
         
         .image-modal.active {
@@ -348,69 +389,196 @@
         }
         
         .image-modal-content {
-            max-width: 90%;
+            max-width: 95%;
             max-height: 90%;
-            border-radius: 16px;
+            border-radius: 14px;
             overflow: hidden;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
             position: relative;
         }
         
         .image-modal-img {
             max-width: 100%;
-            max-height: 85vh;
+            max-height: 80vh;
             display: block;
-            border-radius: 14px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
         }
         
         .close-modal {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 40px;
-            height: 40px;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background: rgba(30, 30, 40, 0.8);
+            background: rgba(30, 30, 40, 0.85);
             border: 2px solid #ff4b6a;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 2001;
+            transition: all 0.2s ease;
         }
         
         .close-modal:hover {
             background: #ff4b6a;
-            transform: rotate(90deg);
+            transform: rotate(90deg) scale(1.1);
         }
         
         footer {
             text-align: center;
-            padding: 20px;
-            margin-top: 20px;
+            padding: 15px;
+            margin-top: 15px;
             color: var(--muted);
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(31, 41, 64, 0.7);
-            background: rgba(10, 15, 25, 0.7);
-            position: relative;
-            bottom: 0;
-            width: 100%;
+            font-size: 0.8rem;
+            border-top: 1px solid rgba(31, 41, 64, 0.6);
+            background: rgba(10, 15, 25, 0.6);
+            font-family: inherit;
         }
         
+        /* ✅ MEDIA QUERIES OPTIMIZADAS PARA MÓVIL */
         @media (max-width: 768px) {
-            .catalogo {
-                grid-template-columns: 1fr;
+            header {
+                padding: 12px 12px;
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+            
+            .logo-title h1 {
+                font-size: 1.35rem;
+            }
+            
+            .header-contact {
+                font-size: 0.7rem;
+                text-align: left;
             }
             
             .toolbar {
                 grid-template-columns: 1fr;
+                margin-top: 10px;
+                gap: 8px;
+            }
+            
+            .catalogo {
+                grid-template-columns: 1fr;
+                gap: 10px;
             }
             
             .producto-img-container {
-                height: 150px;
+                height: 140px;
+            }
+            
+            .descripcion {
+                font-size: 0.9rem;
+                min-height: 45px;
+            }
+            
+            .precio {
+                font-size: 1.4rem;
+            }
+            
+            .categoria {
+                font-size: 0.9rem;
+                padding: 8px 12px;
+            }
+            
+            .panel {
+                padding: 8px;
+            }
+            
+            .panel-title {
+                font-size: 0.7rem;
+                margin-bottom: 5px;
+            }
+            
+            input[type="text"] {
+                padding: 7px 9px;
+                font-size: 0.85rem;
+            }
+            
+            button {
+                padding: 7px 12px;
+                font-size: 0.8rem;
+            }
+            
+            .login-box {
+                padding: 20px 15px;
+                margin: 10px;
+            }
+            
+            .login-box h2 {
+                font-size: 1.35rem;
+                margin-bottom: 15px;
+            }
+            
+            footer {
+                font-size: 0.75rem;
+                padding: 12px;
+            }
+            
+            #mensajeVacio {
+                font-size: 0.95rem;
+                padding: 25px 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            header {
+                padding: 10px;
+            }
+            
+            .logo-title h1 {
+                font-size: 1.25rem;
+            }
+            
+            .header-contact {
+                font-size: 0.65rem;
+            }
+            
+            .toolbar {
+                margin-top: 8px;
+            }
+            
+            .producto-img-container {
+                height: 130px;
+            }
+            
+            .descripcion {
+                font-size: 0.85rem;
+            }
+            
+            .precio {
+                font-size: 1.35rem;
+            }
+            
+            .categoria {
+                font-size: 0.85rem;
+                padding: 7px 10px;
+            }
+            
+            button {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+            }
+            
+            input[type="text"] {
+                padding: 6px 8px;
+                font-size: 0.8rem;
+            }
+            
+            .admin-input {
+                font-size: 0.75rem;
+                padding: 5px 8px;
+            }
+            
+            .btn-save-img, .btn-delete-img {
+                font-size: 0.7rem;
+                padding: 4px;
             }
         }
     </style>
@@ -418,7 +586,7 @@
 <body>
     <header>
         <div class="logo-title">
-            <h1>Trifusion Technologies - Monitores</h1>
+            <h1>Trifusion Technologies</h1>
         </div>
         <div class="header-contact">
             📍 Santo Domingo<br>
@@ -449,11 +617,8 @@
             <input type="email" id="adminEmail" class="login-input" placeholder="Correo electrónico" autocomplete="email" required>
             <input type="password" id="adminPassword" class="login-input" placeholder="Contraseña" autocomplete="current-password" required>
             <button id="submitLogin" class="btn-login">Iniciar Sesión</button>
-            <div style="margin-top: 15px; padding: 10px; background: rgba(40, 30, 20, 0.7); border-radius: 8px; font-size: 0.85rem; color: var(--muted);">
-                <strong>ℹ️ Instrucciones para imágenes:</strong><br>
-                Pega el link directo de Imgur, ImgBB o Google Drive<br>
-                <strong>Ejemplo ImgBB:</strong><br>
-                <code>https://i.ibb.co/XXXX/tu-imagen.jpg</code>
+            <div style="margin-top: 12px; padding: 8px; background: rgba(40, 30, 20, 0.6); border-radius: 6px; font-size: 0.75rem; color: var(--muted);">
+                <strong>ℹ️ Instrucciones:</strong> Pega URL directa de Imgur, ImgBB o Google Drive
             </div>
         </div>
     </div>
@@ -466,18 +631,18 @@
     </div>
 
     <footer>
-        <p>Trifusion Technologies © 2026 - Todos los derechos reservados</p>
-        <p style="margin-top: 8px; font-size: 0.85rem; opacity: 0.7;">Catálogo de monitores actualizado en tiempo real</p>
+        <p>Trifusion Technologies © 2026</p>
+        <p style="margin-top: 6px; font-size: 0.75rem; opacity: 0.7;">Catálogo de monitores actualizado en tiempo real</p>
     </footer>
 
-    <!-- Firebase SDK - SIN ESPACIOS -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     
     <script>
-        // ✅ CONFIGURACIÓN FIREBASE (igual que index (1).html)
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyDlOJqBgd-8KqUT-Y94lsma5W8T79PsPjM",
             authDomain: "trifusion-cotizador.firebaseapp.com",
@@ -487,27 +652,21 @@
             appId: "1:407374211882:web:b692792ccc39c8d48f4c53"
         };
         
-        // Inicializar Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // ✅ CONFIGURACIÓN MONITORES - URL CORREGIDA (SIN ESPACIOS)
+        // Configuración Monitores
         const SHEET_ID = "1dJ6IGB75oVPaWcWrQjzwjrCeZEmXwlw7";
         const GID = "1636359945";
-        // 🔥 CORRECCIÓN CRÍTICA: URL SIN ESPACIOS (antes tenía espacio después de /d/)
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
 
-        // Variables globales
         let esAdmin = false;
         let todosLosProductos = [];
         let mapaHuellas = {};
 
-        // =========================
-        // FUNCIONES AUXILIARES
-        // =========================
         function limpiarEmojis(txt) {
             return txt.replace(/[\u{1F300}-\u{1FAFF}]/gu, "").trim();
         }
@@ -525,20 +684,14 @@
         function esCategoria(row) {
             const texto = (row[0] || "").trim().toUpperCase();
             const precio = (row[6] || "").trim();
-            
             if (precio && precio.startsWith("RD$")) return false;
-            
             return texto.includes("MONITOR SAMSUNG") || 
                    texto.includes("MONITOR MSI") || 
                    texto.includes("MONITOR AOC") || 
                    texto.includes("MONITOR HP");
         }
 
-        // =========================
-        // INICIALIZACIÓN SEGURA (DOM + Firebase)
-        // =========================
         document.addEventListener("DOMContentLoaded", async () => {
-            // ✅ SELECCIONAR ELEMENTOS (DOM ya está listo)
             const cont = document.getElementById("catalogo");
             const buscador = document.getElementById("buscadorProductos");
             const mensajeVacio = document.getElementById("mensajeVacio");
@@ -550,34 +703,15 @@
             const logoutBtn = document.getElementById("btnLogout");
             const submitLogin = document.getElementById("submitLogin");
 
-            // ✅ VERIFICAR QUE EL SHEET ESTÉ PUBLICADO (antes de intentar cargar)
+            // Verificar Sheet
             try {
                 const testResp = await fetch(CSV_URL, { method: 'HEAD' });
-                if (!testResp.ok) {
-                    throw new Error("El Sheet no está publicado correctamente");
-                }
-            } catch (err) {
-                cont.innerHTML = `
-                    <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--danger);background:rgba(40,20,20,0.3);border-radius:12px;margin:20px">
-                        <h3>⚠️ Sheet no publicado</h3>
-                        <p style="margin:15px 0;font-size:1.1rem">Para que el catálogo funcione, debes:</p>
-                        <ol style="text-align:left;max-width:600px;margin:0 auto;background:rgba(30,15,15,0.5);padding:20px;border-radius:10px">
-                            <li>Abre tu Google Sheet</li>
-                            <li>Haz clic en <strong>Archivo → Compartir → Publicar en la web</strong></li>
-                            <li>Selecciona "Todo el documento" y formato CSV</li>
-                            <li>Haz clic en <strong>Publicar</strong></li>
-                            <li>Copia el enlace y verifica que funcione</li>
-                        </ol>
-                        <p style="margin-top:20px;font-weight:bold">ID del Sheet: ${SHEET_ID}</p>
-                    </div>
-                `;
-                console.error("Sheet no publicado:", err);
+                if (!testResp.ok) throw new Error();
+            } catch {
+                cont.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--danger);background:rgba(40,20,20,0.3);border-radius:10px;margin:15px">⚠️ Sheet no publicado. Verifica Google Sheets.</div>`;
                 return;
             }
 
-            // =========================
-            // CARGA DE HUELLAS
-            // =========================
             async function precargarHuellas() {
                 try {
                     const snapshot = await db.collection("monitores").get();
@@ -592,58 +726,35 @@
                             };
                         }
                     });
-                    console.log(`✅ ${Object.keys(mapaHuellas).length} huellas de monitores cargadas`);
+                    console.log(`✅ ${Object.keys(mapaHuellas).length} huellas cargadas`);
                 } catch (error) {
-                    console.error("⚠️ Error cargando huellas:", error);
+                    console.error("Error huellas:", error);
                 }
             }
 
-            // =========================
-            // EVENTOS DE MODALES
-            // =========================
-            closeModal.addEventListener("click", () => {
-                imageModal.classList.remove("active");
-            });
-
-            imageModal.addEventListener("click", (e) => {
-                if (e.target === imageModal) imageModal.classList.remove("active");
-            });
-
-            loginModal.addEventListener("click", (e) => {
-                if (e.target === loginModal) loginModal.classList.remove("active");
-            });
-
-            loginBtn.addEventListener("click", () => {
-                loginModal.classList.add("active");
-            });
-
-            logoutBtn.addEventListener("click", () => {
-                auth.signOut();
-            });
+            closeModal.addEventListener("click", () => imageModal.classList.remove("active"));
+            imageModal.addEventListener("click", (e) => { if (e.target === imageModal) imageModal.classList.remove("active"); });
+            loginModal.addEventListener("click", (e) => { if (e.target === loginModal) loginModal.classList.remove("active"); });
+            loginBtn.addEventListener("click", () => loginModal.classList.add("active"));
+            logoutBtn.addEventListener("click", () => auth.signOut());
 
             submitLogin.addEventListener("click", () => {
                 const email = document.getElementById("adminEmail").value.trim();
                 const password = document.getElementById("adminPassword").value.trim();
-                
                 if (!email || !password) {
-                    alert("Por favor ingresa correo y contraseña");
+                    alert("Ingresa correo y contraseña");
                     return;
                 }
-                
-                auth.signInWithEmailAndPassword(email, password)
-                    .catch(error => {
-                        let msg = "Error al iniciar sesión. ";
-                        if (error.code === "auth/invalid-email") msg += "Correo inválido.";
-                        else if (error.code === "auth/wrong-password") msg += "Contraseña incorrecta.";
-                        else if (error.code === "auth/user-not-found") msg += "Usuario no encontrado.";
-                        else msg += error.message;
-                        alert(msg);
-                    });
+                auth.signInWithEmailAndPassword(email, password).catch(error => {
+                    let msg = "Error al iniciar sesión. ";
+                    if (error.code === "auth/invalid-email") msg += "Correo inválido.";
+                    else if (error.code === "auth/wrong-password") msg += "Contraseña incorrecta.";
+                    else if (error.code === "auth/user-not-found") msg += "Usuario no encontrado.";
+                    else msg += error.message;
+                    alert(msg);
+                });
             });
 
-            // =========================
-            // AUTH STATE
-            // =========================
             auth.onAuthStateChanged(async (user) => {
                 esAdmin = !!user;
                 loginBtn.style.display = esAdmin ? "none" : "inline-flex";
@@ -651,25 +762,16 @@
                 document.getElementById("adminEmail").value = "";
                 document.getElementById("adminPassword").value = "";
                 loginModal.classList.remove("active");
-                
-                // Cargar catálogo cuando el estado de auth cambie
                 await cargarCatalogo();
             });
 
-            // =========================
-            // CARGAR CATÁLOGO
-            // =========================
             async function cargarCatalogo() {
                 try {
-                    cont.innerHTML = '<div style="text-align:center;padding:40px;color:var(--accent);font-size:1.2rem">Cargando monitores...</div>';
-                    
+                    cont.innerHTML = '<div style="text-align:center;padding:30px;color:var(--accent);font-size:1.1rem">Cargando monitores...</div>';
                     await precargarHuellas();
-                    
                     const resp = await fetch(CSV_URL);
                     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-                    
                     const csv = await resp.text();
-                    
                     Papa.parse(csv, {
                         skipEmptyLines: true,
                         complete: (results) => {
@@ -678,25 +780,15 @@
                         },
                         error: (err) => {
                             console.error("PapaParse error:", err);
-                            cont.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--danger)">❌ Error procesando CSV</div>`;
+                            cont.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--danger)">❌ Error procesando CSV</div>`;
                         }
                     });
                 } catch (error) {
-                    console.error("Error fetching catalog:", error);
-                    cont.innerHTML = `
-                        <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--danger)">
-                            ❌ Error: ${error.message || "No se pudo cargar el catálogo"}
-                            <div style="margin-top:15px;font-size:0.9rem;color:var(--muted)">
-                                Verifica tu conexión y que el Sheet esté publicado
-                            </div>
-                        </div>
-                    `;
+                    console.error("Error:", error);
+                    cont.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--danger)">❌ Error: ${error.message}</div>`;
                 }
             }
 
-            // =========================
-            // RENDER CATÁLOGO
-            // =========================
             function renderCatalogo(rows) {
                 cont.innerHTML = "";
                 const filtro = buscador.value.trim().toLowerCase();
@@ -706,7 +798,6 @@
                     const descripcionCompleta = (row[0] || "").trim();
                     const precioRaw = (row[6] || "").trim();
                     
-                    // Categoría
                     if (esCategoria(row)) {
                         const catEl = document.createElement("div");
                         catEl.className = "categoria";
@@ -715,7 +806,6 @@
                         return;
                     }
                     
-                    // Validar producto
                     if (!descripcionCompleta || !precioRaw || !precioRaw.startsWith("RD$")) return;
                     if (filtro && !descripcionCompleta.toLowerCase().includes(filtro)) return;
                     
@@ -724,7 +814,6 @@
                     const datosProducto = mapaHuellas[huella] || { id: null, imageUrl: "" };
                     const imageUrl = datosProducto.imageUrl;
                     
-                    // Crear producto
                     const prodEl = document.createElement("div");
                     prodEl.className = "producto";
                     
@@ -732,7 +821,7 @@
                         <div class="producto-img-container">
                             ${imageUrl ? 
                                 `<img src="${imageUrl}" alt="${nombreLimpio}" class="producto-img" referrerpolicy="no-referrer">` : 
-                                `<div style="color:var(--muted);font-size:0.9rem;text-align:center;height:100%;display:flex;align-items:center;justify-content:center">Sin imagen</div>`
+                                `<div style="color:var(--muted);font-size:0.85rem;text-align:center;height:100%;display:flex;align-items:center;justify-content:center">Sin imagen</div>`
                             }
                         </div>
                         <div class="descripcion">${nombreLimpio}</div>
@@ -742,8 +831,8 @@
                     if (esAdmin) {
                         html += `
                             <div class="admin-section">
-                                <h4>📸 Imagen del Monitor</h4>
-                                <input type="text" class="admin-input image-url" placeholder="Pega URL de imagen" value="${imageUrl || ''}">
+                                <h4>📸 Imagen</h4>
+                                <input type="text" class="admin-input image-url" placeholder="URL de imagen" value="${imageUrl || ''}">
                                 <div class="admin-actions">
                                     <button class="btn btn-save-img save-image" data-huella="${huella}" data-nombre="${nombreLimpio}">💾 Guardar</button>
                                     ${imageUrl ? `<button class="btn btn-delete-img delete-image" data-huella="${huella}" data-nombre="${nombreLimpio}">🗑️ Eliminar</button>` : ''}
@@ -754,7 +843,6 @@
                     
                     prodEl.innerHTML = html;
                     
-                    // Evento imagen modal
                     if (imageUrl) {
                         const img = prodEl.querySelector(".producto-img");
                         if (img) {
@@ -766,7 +854,6 @@
                         }
                     }
                     
-                    // Eventos admin
                     if (esAdmin) {
                         const saveBtn = prodEl.querySelector(".save-image");
                         const deleteBtn = prodEl.querySelector(".delete-image");
@@ -778,13 +865,11 @@
                             saveBtn.addEventListener("click", async () => {
                                 const url = urlInput.value.trim();
                                 if (!url) {
-                                    alert("Ingresa una URL válida");
+                                    alert("URL válida requerida");
                                     return;
                                 }
-                                
                                 try {
                                     const existe = mapaHuellas[huellaActual];
-                                    
                                     if (existe?.id) {
                                         await db.collection("monitores").doc(existe.id).update({
                                             imageUrl: url,
@@ -798,12 +883,10 @@
                                             createdAt: firebase.firestore.FieldValue.serverTimestamp()
                                         });
                                     }
-                                    
-                                    alert(`✅ Imagen guardada para "${nombreProducto}"`);
+                                    alert(`✅ Imagen guardada`);
                                     await precargarHuellas();
                                     renderCatalogo(todosLosProductos);
                                 } catch (err) {
-                                    console.error("Error guardando:", err);
                                     alert("Error: " + err.message);
                                 }
                             });
@@ -811,25 +894,21 @@
                         
                         if (deleteBtn) {
                             deleteBtn.addEventListener("click", async () => {
-                                if (!confirm(`¿Eliminar imagen de "${nombreProducto}"?`)) return;
-                                
+                                if (!confirm(`¿Eliminar imagen?`)) return;
                                 const existe = mapaHuellas[huellaActual];
                                 if (!existe?.id) {
-                                    alert("No hay imagen para eliminar");
+                                    alert("No hay imagen");
                                     return;
                                 }
-                                
                                 try {
                                     await db.collection("monitores").doc(existe.id).update({
                                         imageUrl: firebase.firestore.FieldValue.delete(),
                                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                                     });
-                                    
-                                    alert(`✅ Imagen eliminada`);
+                                    alert(`✅ Eliminada`);
                                     await precargarHuellas();
                                     renderCatalogo(todosLosProductos);
                                 } catch (err) {
-                                    console.error("Error eliminando:", err);
                                     alert("Error: " + err.message);
                                 }
                             });
@@ -843,12 +922,7 @@
                 mensajeVacio.style.display = productosMostrados === 0 ? "block" : "none";
             }
 
-            // Evento búsqueda
-            buscador.addEventListener("input", () => {
-                renderCatalogo(todosLosProductos);
-            });
-
-            // Cargar inicialmente (auth.onAuthStateChanged lo disparará)
+            buscador.addEventListener("input", () => renderCatalogo(todosLosProductos));
         });
     </script>
 </body>
