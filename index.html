@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitores - Trifusion Technologies</title>
+    <title>Trifusion Technologies - Monitores</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         :root {
             --bg: #0b0f19;
@@ -276,13 +276,6 @@
             color: transparent;
         }
 
-        .precio.transito {
-            color: #ffc14b;
-            text-shadow: 0 0 6px rgba(255, 193, 75, 0.45);
-            background: none;
-            color: #ffc14b;
-        }
-
         .admin-section {
             background: rgba(30, 25, 50, 0.8);
             border-radius: 12px;
@@ -480,12 +473,15 @@
 
         footer {
             text-align: center;
-            padding: 25px;
-            color: var(--muted);
-            font-size: 14px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 20px;
             margin-top: 20px;
-            background: rgba(5, 7, 18, 0.7);
+            color: var(--muted);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(31, 41, 64, 0.7);
+            background: rgba(10, 15, 25, 0.7);
+            position: relative;
+            bottom: 0;
+            width: 100%;
         }
 
         @media (max-width: 768px) {
@@ -573,11 +569,11 @@
     <div class="toolbar">
         <div class="panel">
             <div class="panel-title">Buscar monitores</div>
-            <input id="buscadorProductos" type="text" placeholder="Escribe el modelo o parte del nombre...">
+            <input id="buscadorProductos" type="text" placeholder="Escribe el modelo o características...">
         </div>
         <div class="panel">
             <div class="panel-title">Acceso Administrador</div>
-            <button id="btnLogin" class="btn-admin">🔐 ADMIN</button>
+            <button id="btnLogin" class="btn-admin">TRIFUSION</button>
             <button id="btnLogout" class="btn-logout">👋 SALIR</button>
         </div>
     </div>
@@ -587,13 +583,21 @@
         <div id="mensajeVacio" style="display:none;">No se encontraron monitores.</div>
     </div>
 
+    <footer>
+        <p>Trifusion Technologies © 2026 - Todos los derechos reservados</p>
+        <p style="margin-top: 8px; font-size: 0.85rem; opacity: 0.7;">Catálogo de monitores actualizado en tiempo real</p>
+    </footer>
+
     <!-- MODAL DE LOGIN -->
     <div id="loginModal" class="login-modal">
         <div class="login-box">
-            <h2>Acceso de Administrador</h2>
+            <h2>TRIFUSION</h2>
             <input type="email" id="adminEmail" class="login-input" placeholder="Correo electrónico" autocomplete="email" required>
             <input type="password" id="adminPassword" class="login-input" placeholder="Contraseña" autocomplete="current-password" required>
             <button id="submitLogin" class="btn-login">Iniciar Sesión</button>
+            <div style="margin-top: 12px; padding: 8px; background: rgba(40, 30, 20, 0.6); border-radius: 6px; font-size: 0.75rem; color: var(--muted);">
+                <strong>ℹ️ Instrucciones:</strong> Pega URL directa de Imgur, ImgBB o Google Drive
+            </div>
         </div>
     </div>
 
@@ -605,46 +609,34 @@
         </div>
     </div>
 
-    <footer>
-        Trifusion Technologies © 2026 - Todos los derechos reservados<br>
-        Catálogo de monitores actualizado en tiempo real
-    </footer>
-
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK - URLs CORREGIDAS (sin espacios) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    
-    <!-- PapaParse -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     
     <script>
-        // =========================
-        // CONFIGURACIÓN DE FIREBASE
-        // =========================
+        // ✅ CONFIGURACIÓN FIREBASE
         const firebaseConfig = {
-            apiKey: "AIzaSyDl9z7hV9QZ9Z9Z9Z9Z9Z9Z9Z9Z9Z9Z9Z9",
-            authDomain: "trifusion-tech.firebaseapp.com",
-            projectId: "trifusion-tech",
-            storageBucket: "trifusion-tech.appspot.com",
-            messagingSenderId: "1234567890",
-            appId: "1:1234567890:web:abcdef123456789"
+            apiKey: "AIzaSyDlOJqBgd-8KqUT-Y94lsma5W8T79PsPjM",
+            authDomain: "trifusion-cotizador.firebaseapp.com",
+            projectId: "trifusion-cotizador",
+            storageBucket: "trifusion-cotizador.firebasestorage.app",
+            messagingSenderId: "407374211882",
+            appId: "1:407374211882:web:b692792ccc39c8d48f4c53"
         };
-
-        // Inicializar Firebase
+        
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // =========================
-        // CONFIGURACIÓN PARA MONITORES
-        // =========================
+        // ✅ CONFIGURACIÓN MONITORES - URL CORREGIDA (SIN ESPACIOS)
         const SHEET_ID = "1dJ6IGB75oVPaWcWrQjzwjrCeZEmXwlw7";
         const GID = "1636359945";
+        // 🔥 URL CORREGIDA: SIN ESPACIOS después de /d/
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
-        const IMPUESTO = 1.22;
 
         let esAdmin = false;
         let todosLosProductos = [];
@@ -667,272 +659,88 @@
                 .trim();
         }
 
-        function formatearPrecio(num) {
-            return "$" + num.toLocaleString("es-DO");
-        }
-
+        // ✅ REGLA 5️⃣: Detectar categorías de monitores
         function esCategoria(row) {
+            // ✅ REGLA 9️⃣: Verificar longitud del array
             if (!row || row.length < 7) return false;
             
             const texto = (row[0] || "").trim().toUpperCase();
-            const categoriasValidas = [
-                "MONITOR SAMSUNG",
-                "MONITOR MSI",
-                "MONITOR AOC",
-                "MONITOR HP"
-            ];
+            const precio = (row[6] || "").trim();
             
-            const tienePrecio = (row[6] || "").trim().startsWith("RD$");
-            return categoriasValidas.some(cat => texto.includes(cat)) && !tienePrecio;
-        }
-
-        // =========================
-        // CARGA DE HUELLAS DESDE FIRESTORE
-        // =========================
-        async function precargarHuellas() {
-            try {
-                const snapshot = await db.collection("monitors").get();
-                mapaHuellas = {};
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    if (data.huella) {
-                        mapaHuellas[data.huella] = {
-                            id: doc.id,
-                            imageUrl: data.imageUrl || "",
-                            updatedAt: data.updatedAt?.toDate?.() || null
-                        };
-                    }
-                });
-                console.log(`✅ ${Object.keys(mapaHuellas).length} huellas de monitores cargadas`);
-            } catch (error) {
-                console.error("⚠️ Error cargando huellas de monitores:", error);
-            }
-        }
-
-        // =========================
-        // CARGAR CATÁLOGO
-        // =========================
-        async function cargarCatalogo() {
-            const cont = document.getElementById("catalogo");
-            cont.innerHTML = '<div style="text-align:center;padding:30px;color:var(--accent)">Cargando monitores...</div>';
+            // Si tiene precio, NO es categoría
+            if (precio && precio.startsWith("RD$")) return false;
             
-            try {
-                await precargarHuellas();
-                
-                const resp = await fetch(CSV_URL);
-                if (!resp.ok) throw new Error(`Error al cargar: ${resp.status}`);
-                
-                const csv = await resp.text();
-                
-                Papa.parse(csv, {
-                    skipEmptyLines: true,
-                    complete: (results) => {
-                        todosLosProductos = results.data;
-                        renderCatalogo(results.data);
-                    },
-                    error: (err) => {
-                        console.error("Error parsing CSV:", err);
-                        cont.innerHTML = `<div style="text-align:center;padding:30px;color:var(--danger)">❌ Error al procesar el catálogo</div>`;
-                    }
-                });
-            } catch (error) {
-                console.error("Error fetching catalog:", error);
-                cont.innerHTML = `<div style="text-align:center;padding:30px;color:var(--danger)">❌ Error: ${error.message}</div>`;
-            }
+            // ✅ REGLA 5️⃣: Categorías válidas
+            return texto.includes("MONITOR SAMSUNG") || 
+                   texto.includes("MONITOR MSI") || 
+                   texto.includes("MONITOR AOC") || 
+                   texto.includes("MONITOR HP");
         }
 
-        function renderCatalogo(rows) {
+        // =========================
+        // INICIALIZACIÓN SEGURA
+        // =========================
+        document.addEventListener("DOMContentLoaded", async () => {
             const cont = document.getElementById("catalogo");
             const buscador = document.getElementById("buscadorProductos");
             const mensajeVacio = document.getElementById("mensajeVacio");
-            
-            cont.innerHTML = "";
-            const filtro = buscador.value.trim().toLowerCase();
-            let productosMostrados = 0;
-            
-            rows.forEach(row => {
-                if (!row || row.length < 7) return;
-                
-                const descripcionCompleta = (row[0] || "").trim();
-                const precioRaw = (row[6] || "").trim();
-                
-                // Renderizar categoría
-                if (esCategoria(row)) {
-                    const textoCategoria = limpiarEmojis(descripcionCompleta);
-                    const catEl = document.createElement("div");
-                    catEl.className = "categoria";
-                    catEl.innerHTML = `<div style="padding:14px 18px;background:rgba(0,194,255,0.25);border-left:6px solid #00c2ff;font-weight:800;letter-spacing:.18em;text-transform:uppercase">${textoCategoria}</div>`;
-                    cont.appendChild(catEl);
-                    return;
-                }
-                
-                // Validar producto
-                if (!descripcionCompleta || !precioRaw || !precioRaw.startsWith("RD$")) return;
-                if (filtro && !descripcionCompleta.toLowerCase().includes(filtro)) return;
-                
-                const precioLimpio = precioRaw.replace(/[^0-9]/g, "");
-                if (!precioLimpio) return;
-                
-                const precioConImpuesto = Math.round(parseFloat(precioLimpio) * IMPUESTO);
-                const nombreLimpio = limpiarEmojis(descripcionCompleta);
-                const huella = generarHuella(nombreLimpio);
-                const datosProducto = mapaHuellas[huella] || { id: null, imageUrl: "" };
-                const imageUrl = datosProducto.imageUrl;
-                
-                // Crear elemento de producto
-                const prodEl = document.createElement("div");
-                prodEl.className = "producto";
-                
-                let htmlProducto = `
-                    <div class="producto-content">
-                        <div class="descripcion">${nombreLimpio}</div>
-                `;
-                
-                if (imageUrl) {
-                    htmlProducto += `
-                        <div class="producto-img-container">
-                            <img src="${imageUrl}" alt="${nombreLimpio}" class="producto-img" referrerpolicy="no-referrer">
-                        </div>
-                    `;
-                }
-                
-                htmlProducto += `
-                    </div>
-                    <div class="producto-right">
-                        <div class="precio">${formatearPrecio(precioConImpuesto)}</div>
-                `;
-                
-                if (esAdmin) {
-                    htmlProducto += `
-                        <div class="admin-section">
-                            <h4>📸 Imagen del Monitor</h4>
-                            <input type="text" class="admin-input image-url" placeholder="Pega URL de imagen" value="${imageUrl}">
-                            <div class="admin-actions">
-                                <button class="btn btn-save-img save-image" data-huella="${huella}" data-nombre="${nombreLimpio}">💾 Guardar</button>
-                                ${imageUrl ? `<button class="btn btn-delete-img delete-image" data-huella="${huella}" data-nombre="${nombreLimpio}">🗑️ Eliminar</button>` : ''}
-                            </div>
-                        </div>
-                    `;
-                }
-                
-                htmlProducto += `</div>`;
-                prodEl.innerHTML = htmlProducto;
-                
-                // Eventos de imagen
-                if (imageUrl) {
-                    const imgEl = prodEl.querySelector(".producto-img");
-                    if (imgEl) {
-                        imgEl.addEventListener("click", (e) => {
-                            e.stopPropagation();
-                            document.getElementById("modalImage").src = imageUrl;
-                            document.getElementById("imageModal").classList.add("active");
-                        });
-                    }
-                }
-                
-                // Eventos de administración
-                if (esAdmin) {
-                    const saveBtn = prodEl.querySelector(".save-image");
-                    const deleteBtn = prodEl.querySelector(".delete-image");
-                    const urlInput = prodEl.querySelector(".image-url");
-                    const huellaActual = huella;
-                    const nombreProducto = nombreLimpio;
-                    
-                    if (saveBtn) {
-                        saveBtn.addEventListener("click", async () => {
-                            const url = urlInput.value.trim();
-                            if (!url) {
-                                alert("Por favor ingresa una URL válida");
-                                return;
-                            }
-                            
-                            try {
-                                const existe = mapaHuellas[huellaActual];
-                                
-                                if (existe?.id) {
-                                    await db.collection("monitors").doc(existe.id).update({
-                                        imageUrl: url,
-                                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                                    });
-                                } else {
-                                    await db.collection("monitors").add({
-                                        huella: huellaActual,
-                                        imageUrl: url,
-                                        nombreOriginal: nombreProducto,
-                                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                                    });
-                                }
-                                
-                                alert(`✅ Imagen guardada para "${nombreProducto}"`);
-                                await precargarHuellas();
-                                renderCatalogo(todosLosProductos);
-                            } catch (error) {
-                                console.error("Error guardando imagen:", error);
-                                alert("Error al guardar la imagen: " + error.message);
-                            }
-                        });
-                    }
-                    
-                    if (deleteBtn) {
-                        deleteBtn.addEventListener("click", async () => {
-                            if (!confirm(`¿Eliminar la imagen de "${nombreProducto}"?`)) return;
-                            
-                            const existe = mapaHuellas[huellaActual];
-                            if (!existe?.id) {
-                                alert("No hay imagen para eliminar");
-                                return;
-                            }
-                            
-                            try {
-                                await db.collection("monitors").doc(existe.id).update({
-                                    imageUrl: firebase.firestore.FieldValue.delete(),
-                                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                                });
-                                
-                                alert(`✅ Imagen eliminada para "${nombreProducto}"`);
-                                await precargarHuellas();
-                                renderCatalogo(todosLosProductos);
-                            } catch (error) {
-                                console.error("Error eliminando imagen:", error);
-                                alert("Error al eliminar la imagen: " + error.message);
-                            }
-                        });
-                    }
-                }
-                
-                cont.appendChild(prodEl);
-                productosMostrados++;
-            });
-            
-            mensajeVacio.style.display = productosMostrados === 0 ? "block" : "none";
-        }
-
-        // =========================
-        // INICIALIZACIÓN
-        // =========================
-        document.addEventListener("DOMContentLoaded", () => {
             const loginModal = document.getElementById("loginModal");
             const imageModal = document.getElementById("imageModal");
+            const modalImage = document.getElementById("modalImage");
             const closeModal = document.querySelector(".close-modal");
             const loginBtn = document.getElementById("btnLogin");
             const logoutBtn = document.getElementById("btnLogout");
             const submitLogin = document.getElementById("submitLogin");
-            const buscador = document.getElementById("buscadorProductos");
-            
-            // Eventos
+
+            // ✅ Verificar Sheet
+            try {
+                const testResp = await fetch(CSV_URL, { method: 'HEAD' });
+                if (!testResp.ok) throw new Error();
+            } catch {
+                cont.innerHTML = `<div style="text-align:center;padding:30px;color:var(--danger);background:rgba(40,20,20,0.3);border-radius:10px;margin:15px">⚠️ Sheet no publicado. Verifica Google Sheets.</div>`;
+                return;
+            }
+
+            // =========================
+            // CARGA DE HUELLAS
+            // =========================
+            async function precargarHuellas() {
+                try {
+                    // ✅ Colección "monitores"
+                    const snapshot = await db.collection("monitores").get();
+                    mapaHuellas = {};
+                    snapshot.forEach(doc => {
+                        const data = doc.data();
+                        if (data.huella) {
+                            mapaHuellas[data.huella] = {
+                                id: doc.id,
+                                imageUrl: data.imageUrl || "",
+                                updatedAt: data.updatedAt?.toDate?.() || null
+                            };
+                        }
+                    });
+                    console.log(`✅ ${Object.keys(mapaHuellas).length} huellas de monitores cargadas`);
+                } catch (error) {
+                    console.error("Error huellas:", error);
+                }
+            }
+
+            // =========================
+            // EVENTOS
+            // =========================
+            closeModal.addEventListener("click", () => imageModal.classList.remove("active"));
+            imageModal.addEventListener("click", (e) => { if (e.target === imageModal) imageModal.classList.remove("active"); });
+            loginModal.addEventListener("click", (e) => { if (e.target === loginModal) loginModal.classList.remove("active"); });
             loginBtn.addEventListener("click", () => loginModal.classList.add("active"));
-            
             logoutBtn.addEventListener("click", () => auth.signOut());
-            
+
             submitLogin.addEventListener("click", () => {
                 const email = document.getElementById("adminEmail").value.trim();
                 const password = document.getElementById("adminPassword").value.trim();
-                
                 if (!email || !password) {
-                    alert("Por favor ingresa correo y contraseña");
+                    alert("Ingresa correo y contraseña");
                     return;
                 }
-                
                 auth.signInWithEmailAndPassword(email, password).catch(error => {
                     let msg = "Error al iniciar sesión. ";
                     if (error.code === "auth/invalid-email") msg += "Correo inválido.";
@@ -942,23 +750,201 @@
                     alert(msg);
                 });
             });
-            
-            closeModal.addEventListener("click", () => imageModal.classList.remove("active"));
-            imageModal.addEventListener("click", (e) => e.target === imageModal && imageModal.classList.remove("active"));
-            loginModal.addEventListener("click", (e) => e.target === loginModal && loginModal.classList.remove("active"));
-            
-            buscador.addEventListener("input", () => renderCatalogo(todosLosProductos));
-            
-            // Observador de autenticación
-            auth.onAuthStateChanged(user => {
+
+            auth.onAuthStateChanged(async (user) => {
                 esAdmin = !!user;
                 loginBtn.style.display = esAdmin ? "none" : "inline-flex";
                 logoutBtn.style.display = esAdmin ? "inline-flex" : "none";
                 document.getElementById("adminEmail").value = "";
                 document.getElementById("adminPassword").value = "";
                 loginModal.classList.remove("active");
-                cargarCatalogo();
+                await cargarCatalogo();
             });
+
+            // =========================
+            // CARGAR CATÁLOGO
+            // =========================
+            async function cargarCatalogo() {
+                try {
+                    cont.innerHTML = '<div style="text-align:center;padding:30px;color:var(--accent);font-size:1.1rem">Cargando monitores...</div>';
+                    await precargarHuellas();
+                    const resp = await fetch(CSV_URL);
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                    const csv = await resp.text();
+                    Papa.parse(csv, {
+                        skipEmptyLines: true,
+                        complete: (results) => {
+                            todosLosProductos = results.data;
+                            renderCatalogo(results.data);
+                        },
+                        error: (err) => {
+                            console.error("PapaParse error:", err);
+                            cont.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--danger)">❌ Error procesando CSV</div>`;
+                        }
+                    });
+                } catch (error) {
+                    console.error("Error:", error);
+                    cont.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--danger)">❌ Error: ${error.message}</div>`;
+                }
+            }
+
+            // =========================
+            // RENDER CATÁLOGO - REGLAS IMPLEMENTADAS
+            // =========================
+            function renderCatalogo(rows) {
+                cont.innerHTML = "";
+                const filtro = buscador.value.trim().toLowerCase();
+                let productosMostrados = 0;
+                
+                rows.forEach(row => {
+                    // ✅ REGLA 7️⃣: Ignorar filas con menos de 7 columnas
+                    if (!row || row.length < 7) {
+                        console.warn("Fila ignorada: menos de 7 columnas");
+                        return;
+                    }
+                    
+                    // ✅ REGLA 3️⃣: Columna A (row[0]) = descripción
+                    const descripcionCompleta = (row[0] || "").trim();
+                    
+                    // ✅ REGLA 5️⃣: Columna G (row[6]) = precio
+                    const precioRaw = (row[6] || "").trim();
+                    
+                    // ✅ REGLA 5️⃣: Renderizar categoría
+                    if (esCategoria(row)) {
+                        const catEl = document.createElement("div");
+                        catEl.className = "categoria";
+                        catEl.innerHTML = `<div style="padding:14px 18px;background:rgba(0,194,255,0.25);border-left:6px solid #00c2ff;font-weight:800;letter-spacing:.18em;text-transform:uppercase">${limpiarEmojis(descripcionCompleta)}</div>`;
+                        cont.appendChild(catEl);
+                        return;
+                    }
+                    
+                    // ✅ REGLA 6️⃣: Validar producto
+                    // Debe tener descripción Y precio que empiece con "RD$"
+                    if (!descripcionCompleta || !precioRaw || !precioRaw.startsWith("RD$")) {
+                        console.warn("Fila ignorada: no cumple reglas de producto", { descripcionCompleta, precioRaw });
+                        return;
+                    }
+                    
+                    // ✅ REGLA 4️⃣: Aplicar filtro de búsqueda
+                    if (filtro && !descripcionCompleta.toLowerCase().includes(filtro)) return;
+                    
+                    const nombreLimpio = limpiarEmojis(descripcionCompleta);
+                    const huella = generarHuella(nombreLimpio);
+                    const datosProducto = mapaHuellas[huella] || { id: null, imageUrl: "" };
+                    const imageUrl = datosProducto.imageUrl;
+                    
+                    // ✅ DISEÑO HORIZONTAL IDÉNTICO A IMPRESORAS
+                    const prodEl = document.createElement("div");
+                    prodEl.className = "producto";
+                    
+                    let html = `
+                        <div class="producto-content">
+                            <div class="descripcion">${nombreLimpio}</div>
+                            ${imageUrl ? `<div class="producto-img-container">
+                                <img src="${imageUrl}" alt="${nombreLimpio}" class="producto-img" referrerpolicy="no-referrer">
+                            </div>` : ''}
+                        </div>
+                        <div class="producto-right">
+                            <div class="precio">${precioRaw}</div>
+                    `;
+                    
+                    if (esAdmin) {
+                        html += `
+                            <div class="admin-section">
+                                <h4>📸 Imagen</h4>
+                                <input type="text" class="admin-input image-url" placeholder="URL de imagen" value="${imageUrl || ''}">
+                                <div class="admin-actions">
+                                    <button class="btn btn-save-img save-image" data-huella="${huella}" data-nombre="${nombreLimpio}">💾 Guardar</button>
+                                    ${imageUrl ? `<button class="btn btn-delete-img delete-image" data-huella="${huella}" data-nombre="${nombreLimpio}">🗑️ Eliminar</button>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    html += `</div>`;
+                    prodEl.innerHTML = html;
+                    
+                    // Eventos (idénticos a impresoras)
+                    if (imageUrl) {
+                        const img = prodEl.querySelector(".producto-img");
+                        if (img) {
+                            img.addEventListener("click", (e) => {
+                                e.stopPropagation();
+                                modalImage.src = imageUrl;
+                                imageModal.classList.add("active");
+                            });
+                        }
+                    }
+                    
+                    if (esAdmin) {
+                        const saveBtn = prodEl.querySelector(".save-image");
+                        const deleteBtn = prodEl.querySelector(".delete-image");
+                        const urlInput = prodEl.querySelector(".image-url");
+                        const huellaActual = huella;
+                        const nombreProducto = nombreLimpio;
+                        
+                        if (saveBtn) {
+                            saveBtn.addEventListener("click", async () => {
+                                const url = urlInput.value.trim();
+                                if (!url) {
+                                    alert("URL válida requerida");
+                                    return;
+                                }
+                                try {
+                                    const existe = mapaHuellas[huellaActual];
+                                    if (existe?.id) {
+                                        await db.collection("monitores").doc(existe.id).update({
+                                            imageUrl: url,
+                                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                                        });
+                                    } else {
+                                        await db.collection("monitores").add({
+                                            huella: huellaActual,
+                                            imageUrl: url,
+                                            nombreOriginal: nombreProducto,
+                                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                                        });
+                                    }
+                                    alert(`✅ Imagen guardada`);
+                                    await precargarHuellas();
+                                    renderCatalogo(todosLosProductos);
+                                } catch (err) {
+                                    alert("Error: " + err.message);
+                                }
+                            });
+                        }
+                        
+                        if (deleteBtn) {
+                            deleteBtn.addEventListener("click", async () => {
+                                if (!confirm(`¿Eliminar imagen?`)) return;
+                                const existe = mapaHuellas[huellaActual];
+                                if (!existe?.id) {
+                                    alert("No hay imagen");
+                                    return;
+                                }
+                                try {
+                                    await db.collection("monitores").doc(existe.id).update({
+                                        imageUrl: firebase.firestore.FieldValue.delete(),
+                                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                                    });
+                                    alert(`✅ Eliminada`);
+                                    await precargarHuellas();
+                                    renderCatalogo(todosLosProductos);
+                                } catch (err) {
+                                    alert("Error: " + err.message);
+                                }
+                            });
+                        }
+                    }
+                    
+                    cont.appendChild(prodEl);
+                    productosMostrados++;
+                });
+                
+                mensajeVacio.style.display = productosMostrados === 0 ? "block" : "none";
+            }
+
+            buscador.addEventListener("input", () => renderCatalogo(todosLosProductos));
         });
     </script>
 </body>
