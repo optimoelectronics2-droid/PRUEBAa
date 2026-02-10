@@ -1,9 +1,24 @@
-<!DOCTYPE html>
+
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body {
+                  background-color: white; /* Ensure the iframe has a white background */
+                }
+
+                
+              </style>
+                        </head>
+                        <body>
+                            <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitores - Trifusion Technologies</title>
+    <title>Trifusion Technologies - Monitores</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         :root {
             --bg: #0b0f19;
@@ -274,13 +289,6 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-        }
-
-        .precio.transito {
-            color: #ffc14b;
-            text-shadow: 0 0 6px rgba(255, 193, 75, 0.45);
-            background: none;
-            color: #ffc14b;
         }
 
         .admin-section {
@@ -563,7 +571,7 @@
     <div class="toolbar">
         <div class="panel">
             <div class="panel-title">Buscar monitores</div>
-            <input id="buscadorProductos" type="text" placeholder="Escribe el modelo o parte del nombre...">
+            <input id="buscadorProductos" type="text" placeholder="Escribe el modelo o características...">
         </div>
         <div class="panel">
             <div class="panel-title">Acceso Administrador</div>
@@ -584,6 +592,12 @@
             <input type="email" id="adminEmail" class="login-input" placeholder="Correo electrónico" autocomplete="email" required>
             <input type="password" id="adminPassword" class="login-input" placeholder="Contraseña" autocomplete="current-password" required>
             <button id="submitLogin" class="btn-login">Iniciar Sesión</button>
+            <div style="margin-top: 15px; padding: 10px; background: rgba(40, 30, 20, 0.7); border-radius: 8px; font-size: 0.85rem; color: var(--muted);">
+                <strong>ℹ️ Instrucciones para imágenes:</strong><br>
+                Pega el link directo de Imgur, ImgBB o Google Drive<br>
+                <strong>Ejemplo ImgBB:</strong><br>
+                <code>https://i.ibb.co/XXXX/tu-imagen.jpg</code>
+            </div>
         </div>
     </div>
 
@@ -595,43 +609,43 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK - SIN ESPACIOS EN URLs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     
-    <!-- PapaParse -->
+    <!-- PapaParse - SIN ESPACIOS -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     
+    <!-- Firebase Config - INTEGRADA DIRECTAMENTE -->
     <script>
-        // =========================
-        // CONFIGURACIÓN DE FIREBASE
-        // =========================
+        // CONFIGURACIÓN DE FIREBASE (CORRECTA)
         const firebaseConfig = {
-            apiKey: "TU_API_KEY",
-            authDomain: "TU_PROYECTO.firebaseapp.com",
-            projectId: "TU_PROYECTO",
-            storageBucket: "TU_PROYECTO.appspot.com",
-            messagingSenderId: "TU_MESSAGING_SENDER_ID",
-            appId: "TU_APP_ID"
+            apiKey: "AIzaSyDlOJqBgd-8KqUT-Y94lsma5W8T79PsPjM",
+            authDomain: "trifusion-cotizador.firebaseapp.com",
+            projectId: "trifusion-cotizador",
+            storageBucket: "trifusion-cotizador.firebasestorage.app",
+            messagingSenderId: "407374211882",
+            appId: "1:407374211882:web:b692792ccc39c8d48f4c53"
         };
-
-        // Inicializar Firebase
+        
+        // Initialize Firebase
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
-
-        // Obtener instancias de Firebase
+        
         const auth = firebase.auth();
         const db = firebase.firestore();
-
+    </script>
+    
+    <script>
         // =========================
-        // CONFIGURACIÓN PARA MONITORES
+        // CONFIGURACIÓN PARA MONITORES (CORREGIDA)
         // =========================
         const SHEET_ID = "1dJ6IGB75oVPaWcWrQjzwjrCeZEmXwlw7";
         const GID = "1636359945"; // ID de la hoja de monitores
+        // URL CORREGIDA: SIN ESPACIOS, SINTAXIS VÁLIDA
         const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=${GID}`;
-        const IMPUESTO = 1.22; // 22% de impuesto
         const cont = document.getElementById("catalogo");
         const buscador = document.getElementById("buscadorProductos");
         const mensajeVacio = document.getElementById("mensajeVacio");
@@ -654,40 +668,35 @@
             return txt.replace(/[\u{1F300}-\u{1FAFF}]/gu, "").trim();
         }
 
-        // Generar huella estable del producto (tolerante a cambios menores)
+        // GENERAR HUELLA ESTABLE DEL PRODUCTO
         function generarHuella(nombre) {
             return nombre
                 .toLowerCase()
                 .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                .replace(/[\u{1F300}-\u{1FAFF}]/gu, "") // Eliminar emojis
-                .replace(/[^a-z0-9\s]/g, " ")           // Solo letras, números y espacios
-                .replace(/\s+/g, " ")                    // Espacios múltiples → uno
+                .replace(/[\u{1F300}-\u{1FAFF}]/gu, "")
+                .replace(/[^a-z0-9\s]/g, " ")
+                .replace(/\s+/g, " ")
                 .trim();
         }
 
-        function formatearPrecio(num) {
-            return "$" + num.toLocaleString("es-DO");
-        }
-
-        // Detectar categorías de monitores
+        // DETECTAR CATEGORÍAS DE MONITORES (CORREGIDO)
         function esCategoria(row) {
-            // Verificar que la fila tenga al menos 7 columnas
-            if (!row || row.length < 7) return false;
+            // Verificar que la fila tenga al menos 1 columna
+            if (!row || row.length === 0) return false;
             
-            // Las categorías están en la primera columna y contienen uno de estos textos
             const texto = (row[0] || "").trim().toUpperCase();
-            const categoriasValidas = [
-                "MONITOR SAMSUNG",
-                "MONITOR MSI",
-                "MONITOR AOC",
-                "MONITOR HP"
-            ];
             
-            // Verificar si el texto contiene alguna de las categorías válidas
-            // Y que NO tenga precio en la columna G (índice 6)
-            const tienePrecio = (row[6] || "").trim().startsWith("RD$");
+            // Verificar que la fila tenga al menos 7 columnas antes de acceder a row[6]
+            const precio = (row.length > 6) ? (row[6] || "").trim() : "";
             
-            return categoriasValidas.some(cat => texto.includes(cat)) && !tienePrecio;
+            // Si tiene precio, NO es categoría
+            if (precio && precio.startsWith("RD$")) return false;
+            
+            // Categorías válidas en tu Sheet de monitores
+            return texto.includes("MONITOR SAMSUNG") || 
+                   texto.includes("MONITOR MSI") || 
+                   texto.includes("MONITOR AOC") || 
+                   texto.includes("MONITOR HP");
         }
 
         // =========================
@@ -695,8 +704,8 @@
         // =========================
         async function precargarHuellas() {
             try {
-                // Usamos la colección "monitors" para no mezclar con productos
-                const snapshot = await db.collection("monitors").get();
+                // Usamos colección "monitores" (NO "printers")
+                const snapshot = await db.collection("monitores").get();
                 mapaHuellas = {};
                 snapshot.forEach(doc => {
                     const data = doc.data();
@@ -801,12 +810,12 @@
                     },
                     error: (err) => {
                         console.error("Error parsing CSV:", err);
-                        cont.innerHTML = `<div class="status-error">❌ Error al procesar el catálogo</div>`;
+                        cont.innerHTML = `<div id="mensajeVacio" style="text-align:center;padding:30px;color:var(--danger)">❌ Error al procesar el catálogo</div>`;
                     }
                 });
             } catch (error) {
                 console.error("Error fetching catalog:", error);
-                cont.innerHTML = `<div class="status-error">❌ Error: ${error.message}</div>`;
+                cont.innerHTML = `<div id="mensajeVacio" style="text-align:center;padding:30px;color:var(--danger)">❌ Error: ${error.message}</div>`;
             }
         }
 
@@ -816,16 +825,12 @@
             let productosMostrados = 0;
             
             rows.forEach(row => {
-                // Validar que la fila tenga al menos 7 columnas
-                if (!row || row.length < 7) {
-                    console.warn("Fila con menos de 7 columnas, ignorada");
-                    return;
-                }
+                // ✅ VALIDACIÓN: Verificar que la fila tenga al menos 7 columnas
+                if (!row || row.length < 7) return;
                 
-                // Columna A: descripción (índice 0)
-                const descripcionCompleta = (row[0] || "").trim();
-                
+                // Columna A: descripción completa (índice 0)
                 // Columna G: precio (índice 6)
+                const descripcionCompleta = (row[0] || "").trim();
                 const precioRaw = (row[6] || "").trim();
                 
                 // Renderizar categoría
@@ -838,29 +843,11 @@
                     return;
                 }
                 
-                // Saltar filas sin descripción o sin precio
-                if (!descripcionCompleta || !precioRaw) {
-                    return;
-                }
-                
-                // Saltar si no es un precio válido (debe empezar con RD$)
-                if (!precioRaw.startsWith("RD$")) {
-                    return;
-                }
+                // ✅ VALIDACIÓN: Saltar filas sin descripción o sin precio válido
+                if (!descripcionCompleta || !precioRaw || !precioRaw.startsWith("RD$")) return;
                 
                 // Aplicar filtro de búsqueda
-                if (filtro && !descripcionCompleta.toLowerCase().includes(filtro)) {
-                    return;
-                }
-                
-                // Extraer y limpiar el precio
-                const precioLimpio = precioRaw.replace(/[^0-9]/g, "");
-                if (!precioLimpio) {
-                    return;
-                }
-                
-                // Calcular precio con impuesto (22%)
-                const precioConImpuesto = Math.round(parseFloat(precioLimpio) * IMPUESTO);
+                if (filtro && !descripcionCompleta.toLowerCase().includes(filtro)) return;
                 
                 // Generar nombre limpio y huella estable
                 const nombreLimpio = limpiarEmojis(descripcionCompleta);
@@ -874,7 +861,7 @@
                 const prodEl = document.createElement("div");
                 prodEl.className = "producto";
                 
-                // HTML del producto
+                // HTML del producto - PRECIO EXACTO COMO EN EL SHEET (SIN IMPUESTOS)
                 let htmlProducto = `
                     <div class="producto-content">
                         <div class="descripcion">${nombreLimpio}</div>
@@ -892,7 +879,7 @@
                 htmlProducto += `
                     </div>
                     <div class="producto-right">
-                        <div class="precio">${formatearPrecio(precioConImpuesto)}</div>
+                        <div class="precio">${precioRaw}</div> <!-- PRECIO EXACTO SIN MODIFICAR -->
                 `;
                 
                 // Sección de administración si es admin
@@ -930,7 +917,7 @@
                     const huellaActual = huella;
                     const nombreProducto = nombreLimpio;
                     
-                    if (saveBtn) {
+                    if (saveBtn && urlInput) {
                         saveBtn.addEventListener("click", async () => {
                             const url = urlInput.value.trim();
                             if (!url) {
@@ -941,14 +928,14 @@
                             const existe = mapaHuellas[huellaActual];
                             
                             try {
-                                // Usamos la colección "monitors" para no mezclar con productos
+                                // Usamos colección "monitores" (NO "printers")
                                 if (existe?.id) {
-                                    await db.collection("monitors").doc(existe.id).update({
+                                    await db.collection("monitores").doc(existe.id).update({
                                         imageUrl: url,
                                         updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                                     });
                                 } else {
-                                    await db.collection("monitors").add({
+                                    await db.collection("monitores").add({
                                         huella: huellaActual,
                                         imageUrl: url,
                                         nombreOriginal: nombreProducto,
@@ -957,8 +944,8 @@
                                 }
                                 
                                 alert(`✅ Imagen guardada para "${nombreProducto}"`);
-                                await precargarHuellas(); // Recargar mapa de huellas
-                                renderCatalogo(todosLosProductos); // Refrescar vista
+                                await precargarHuellas();
+                                renderCatalogo(todosLosProductos);
                             } catch (error) {
                                 console.error("Error guardando imagen:", error);
                                 alert("Error al guardar la imagen: " + error.message);
@@ -978,8 +965,7 @@
                             }
                             
                             try {
-                                // Solo eliminamos el campo imageUrl, NO el documento
-                                await db.collection("monitors").doc(existe.id).update({
+                                await db.collection("monitores").doc(existe.id).update({
                                     imageUrl: firebase.firestore.FieldValue.delete(),
                                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                                 });
@@ -1001,6 +987,9 @@
             
             // Mostrar mensaje si no hay productos
             mensajeVacio.style.display = productosMostrados === 0 ? "block" : "none";
+            if (productosMostrados === 0 && cont.children.length === 0) {
+                cont.innerHTML = `<div id="mensajeVacio">No se encontraron monitores.</div>`;
+            }
         }
 
         // =========================
@@ -1015,3 +1004,27 @@
     </script>
 </body>
 </html>
+
+
+
+              <script>
+                              rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ... tus otras reglas existentes ...
+    
+    // ✅ REGLA PARA MONITORES (AGREGA ESTO)
+    match /monitores/{monitorId} {
+      allow read: if true;  // Público puede ver
+      allow write: if request.auth != null;  // Solo admin puede editar
+    }
+    
+    // ... resto de tus reglas ...
+  }
+}
+
+
+              </script>
+                        </body>
+                        </html>
+                    
